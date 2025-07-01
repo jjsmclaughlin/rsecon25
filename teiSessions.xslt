@@ -22,11 +22,11 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 </xsl:template>
 
 <xsl:template match="persName[@type='victimName']">
-        <VICTIM id="{@id}"><xsl:apply-templates/></VICTIM>
+    <VICTIM id="{@id}"><xsl:apply-templates/></VICTIM>
 </xsl:template>
 
 <xsl:template match="rs[@type='occupation']">
-        <OCCUPATION id="{@id}"><xsl:apply-templates/></OCCUPATION>
+    <OCCUPATION id="{@id}"><xsl:apply-templates/></OCCUPATION>
 </xsl:template>
 
 <xsl:template match="rs[@type='crimeDate']">
@@ -114,7 +114,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 </xsl:template>
 
 <xsl:template match="join[@result='offenceCrimeDate']">
-    <OCCDATE targets="{@targets}"/>
+    <OFFDATE targets="{@targets}"/>
 </xsl:template>
 
 <xsl:template match="join[@result='offenceVictim']">

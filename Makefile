@@ -18,7 +18,11 @@ venv-deactivate:
 git-add-dryrun:
 	git add . --dry-run --verbose
 
-preprocess:
+obp_to_prodigy:
 	# source .venv/bin/activate
 	# python obp_to_prodigy.py
 
+prodigy_to_docbin:
+	# source .venv/bin/activate
+	# python prodigy_to_docbin.py obp.jsonl train.spacy 0 3270
+	# python prodigy_to_docbin.py obp.jsonl valid.spacy 3271
