@@ -1,60 +1,23 @@
 #!/usr/bin/python3
 
 import sys
+from tqdm import tqdm
 import json
-#import random
-#import spacy
-#from spacy.tokens import DocBin
-#import re
+import spacy
+from spacy.tokens import DocBin, Doc
 
-#def make_spacy_docbin(data_in, path):
-#
-#    nlp = spacy.blank("en")
-#
-#    db = DocBin()
-#
-#    for datum in data_in:
-#
-#        text = datum['text']
-#
-#        print('\n' + text)
-#
-#        doc = nlp(text)
-#
-#        ents = []
-#
-#        for adatum in datum['spans']:
-#
-#            start = adatum['start']
-#            end = adatum['end']
-#            label = adatum['label']
-#
-#            if label == 'INJURY' or label == 'BODYLOCATION':
-#
-#                print(start, end, label)
-#                print('**' + text[start:end] + '**')
-#
-#                span = doc.char_span(start, end, label=label)
-#                ents.append(span)
-#
-#        print()
-#
-#        doc.ents = ents
-#        db.add(doc)
-#
-#    db.to_disk(path)
+# rels ###############################################################
 
-#def datum_is_suitable(datum):
-#
-#    # doc.char_span(start, end, label) returns None when the start and end character indexes provided don't align with token boundaries.
-#    # So we have to detect the problematic punctuation patterns in advance and remove those records.
-#    # https://stackoverflow.com/questions/74494620/spacy-doc-char-span-raises-error-whenever-there-is-any-number-in-string
-#
-#    if re.search(" [;,] "  , datum['text']): return  False
-#    if re.search("[\\.,;\\)][^ ]"  , datum['text']): return  False
-#    if re.search("[a-z] \\."  , datum['text']): return  False
-#
-#    return True
+MAP_LABELS = {
+    #"Pos-Reg": "Regulates",
+    #"Neg-Reg": "Regulates",
+    #"Reg": "Regulates",
+    #"No-rel": "Regulates",
+    #"Binds": "Binds",
+    "DEFVER": "Defver",
+}
+
+# end of rels ###########################################################
 
 if ( __name__ == "__main__"):
 
@@ -62,22 +25,20 @@ if ( __name__ == "__main__"):
         infile = sys.argv[1]
         outfile = sys.argv[2]
 
-        print(outfile)
     else:
         print('Need infile and outfile to do anything')
         exit(1)
 
-    with open(infile, 'r') as jsonl_file:
+    with open(infile, 'r') as jsonfile:
 
-        jsonl_list = list(jsonl_file)
-        print(infile)
+        jsonlist = list(jsonfile)
 
         start = 0
 
         if len(sys.argv) > 3:
             start = int(sys.argv[3])
 
-        end = len(jsonl_list)
+        end = len(jsonlist)
         print(str(end) + ' lines')
 
         if len(sys.argv) > 4:
@@ -85,78 +46,107 @@ if ( __name__ == "__main__"):
 
         print('Will process lines ' + str(start) + ' to ' + str(end))
 
-        for idx, jsonl_str in enumerate(jsonl_list):
+        nlp = spacy.blank("en")
+        Doc.set_extension("rel", default={}) # rels
+        #db = DocBin()
+        db = DocBin(store_user_data=True) # rels
 
-            if idx >= start and idx <= end:
+        for jsonstr in tqdm(jsonlist[start:end], ascii=True, ncols=60):
 
-                datum = json.loads(jsonl_str)
-                #print(idx)
+            pdatum = json.loads(jsonstr)
+                
+            doc = nlp(pdatum['text'])
+
+            ents = []
+                
+            for span in pdatum['spans']:
+                
+                ent = doc.char_span(span['start'], span['end'], label=span['label'])
+                ents.append(ent)
+                
+            try:
+     
+                doc.ents = ents
+
+            except ValueError as exception:
+
+                print()
+                print()
+                print(exception)
+                print()
+                print(jsonstr)
+                print()
+                exit(1)
+
+            # rels #################################################################
+
+            print()
+            print()
+            print(json.dumps(pdatum))
+
+            span_starts = set()
+
+            for ent in doc.ents:
+                #print(str(ent) + ' : ' + str(ent.start) + ' : ' + str(ent.end) + ' : ' + str(ent.label))
+                span_starts.add(ent.start)
+
+            rels = {}
+
+            for x1 in span_starts:
+                for x2 in span_starts:
+                    rels[(x1, x2)] = {}
+
+            #print(rels)
+
+            for rel in pdatum['rels']:
+
+                # the 'head' and 'child' annotations refer to the end token in the span
+                # but we want the first token
+                # ... what?
+
+                start = doc.ents[rel['head']].start
+                end = doc.ents[rel['child']].start
+                label = rel["label"]
+
+                if label in MAP_LABELS:
+                    rel_label = MAP_LABELS[label]
+                    if rel_label not in rels[(start, end)]:
+                        rels[(start, end)][rel_label] = 1.0
+
+                #print(json.dumps(pdatum))
+                #print(start)
+                #print(end)
+                #print(label)
+                
+
+            # The annotation is complete, so fill in zero's where the data is missing
+            for x1 in span_starts:
+                for x2 in span_starts:
+                    for label in MAP_LABELS.values():
+                        if label not in rels[(x1, x2)]:
+                            rels[(x1, x2)][label] = 0.0
+
+            print()
+            print(rels)
+            print()
+           
+            doc._.rel = rels
+
+            print()
+            print(doc._.rel)
+            print()
+
+            for rel in doc._.rel:
+
+                #print(str(rel[0]) + ' : ' + str(rel[1]) + ' : ' + str(doc._.rel[(rel[0], rel[1])]) + ' : ' + str(span_start_to_ent[rel[0]]) + ' : ' + str(span_start_to_ent[rel[1]]))
+                print(str(rel[0]) + ' : ' + str(rel[1]) + ' : ' + str(doc._.rel[(rel[0], rel[1])]))
 
 
-#    examples = []
-#
-#    with open('../dhi-annotator/data/output/skinandbone_train.jsonl', 'r') as json_file:
-#
-#        json_list = list(json_file)
-#
-#        random.shuffle(json_list)
-#
-#        for json_str in json_list:
-#
-#            datum = json.loads(json_str)
-#
-#            if datum_is_suitable(datum): examples.append(datum)
-#
-#    with open('../dhi-annotator/data/input/skinandbone.jsonl', 'r') as json_file:
-#
-#        json_list = list(json_file)
-#
-#        random.shuffle(json_list)
-#
-#        for json_str in json_list[:220]:
-#
-#            datum = json.loads(json_str)
-#
-#            if datum_is_suitable(datum): examples.append(datum)
-#
-#
-#
-#    random.shuffle(examples)
-#
-#    print(len(examples))
-    #exit()
+            print()
 
-    # ~1000
-    # 60% training      ~600
-    # 20% validation    ~200
-    # 20% testing       ~200
+            # end of rels ##########################################################
 
-    # 394
-    # 70% training      276
-    # 30% validation    118
+            db.add(doc)
 
-    # 10000
-    # 70% training      7000
-    # 30% validation    3000
-
-#    train_data = examples[0:276]
-#    valid_data = examples[276:395]
-#    #test_data =  examples[800:1000]
-#
-#    print(len(train_data))
-#    print(len(valid_data))
-#    #print(len(test_data))
-#
-#    make_spacy_docbin(train_data, './docbin/skb/train.spacy')
-#    make_spacy_docbin(valid_data, './docbin/skb/valid.spacy')
-
-#    f = open("./docbin/skb/test.txt", "w")
-#
-#    for datum in test_data:
-#
-#        print(datum['text'])
-#
-#        f.write(datum['text'] + '\n')
-#
-#    f.close()
+        db.to_disk(outfile)
 
