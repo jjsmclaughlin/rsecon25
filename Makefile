@@ -45,6 +45,10 @@ debug:
 	# source .venv/bin/activate
 	# python -m spacy debug data ./configs/config_tr.cfg
 
+gpu-test:
+	# source .venv/bin/activate
+	# python scripts/gpu_test.py
+
 train:
 	# source .venv/bin/activate
 	####### python -m spacy train config.cfg --paths.train ./train.spacy --paths.dev ./dev.spacy
