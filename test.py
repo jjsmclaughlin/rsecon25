@@ -4,6 +4,12 @@ import sys
 import spacy
 import json
 
+# make the factory work
+from scripts.rel_pipe import make_relation_extractor
+
+# make the config work
+from scripts.rel_model import create_relation_model, create_classification_layer, create_instances, create_tensors
+
 if ( __name__ == "__main__"):
 
     if len(sys.argv) > 2:
@@ -48,4 +54,12 @@ if ( __name__ == "__main__"):
 
             for ent in doc.ents:
                 print(ent.text + ' ' + ent.label_ + '\n')
+
+            for value, rel_dict in doc._.rel.items():
+                print(value)
+                print(rel_dict)
+            #if (rel_dict['Injurybody'] > 0.001):
+                #print(str(value) + ' : ' + str(span_start_to_ent[value[0]]) + ' : ' + str(span_start_to_ent[value[1]]) + ' : ' + str(rel_dict))
+
+
 

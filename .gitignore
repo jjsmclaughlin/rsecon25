@@ -1,7 +1,6 @@
 /.venv
-/obp.jsonl
-/train.spacy
-/train_rel.spacy
-/config.cfg
-/valid.spacy
+/jsonl
+/docbins
+/configs
 /models
+__pycache__/

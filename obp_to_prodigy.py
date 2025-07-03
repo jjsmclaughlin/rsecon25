@@ -333,7 +333,7 @@ if ( __name__ == "__main__"):
     #print(json.dumps(prodigy[0]))
 
     random.shuffle(prodigy)
-    jsonfile = open("obp.jsonl", "w")
+    jsonfile = open("jsonl/obp.jsonl", "w")
     for pdatum in prodigy:
         jsonfile.write(json.dumps(pdatum) + '\n')
 

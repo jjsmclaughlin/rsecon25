@@ -80,9 +80,9 @@ if ( __name__ == "__main__"):
 
             # rels #################################################################
 
-            print()
-            print()
-            print(json.dumps(pdatum))
+            #print()
+            #print()
+            #print(json.dumps(pdatum))
 
             span_starts = set()
 
@@ -126,23 +126,24 @@ if ( __name__ == "__main__"):
                         if label not in rels[(x1, x2)]:
                             rels[(x1, x2)][label] = 0.0
 
-            print()
-            print(rels)
-            print()
+            #print()
+            #print(rels)
+            #print()
            
             doc._.rel = rels
 
-            print()
-            print(doc._.rel)
-            print()
+            #print()
+            #print(doc._.rel)
+            #print()
 
             for rel in doc._.rel:
 
+                pass
                 #print(str(rel[0]) + ' : ' + str(rel[1]) + ' : ' + str(doc._.rel[(rel[0], rel[1])]) + ' : ' + str(span_start_to_ent[rel[0]]) + ' : ' + str(span_start_to_ent[rel[1]]))
-                print(str(rel[0]) + ' : ' + str(rel[1]) + ' : ' + str(doc._.rel[(rel[0], rel[1])]))
+                #print(str(rel[0]) + ' : ' + str(rel[1]) + ' : ' + str(doc._.rel[(rel[0], rel[1])]))
 
 
-            print()
+            #print()
 
             # end of rels ##########################################################
 
