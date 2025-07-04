@@ -5,6 +5,7 @@ venv-make:
 	# python3 -m venv .venv
 	# source .venv/bin/activate
 	# pip install -U lxml
+	# pip install -U tqdm
 	## pip install -U pip setuptools wheel
 	# pip install -U spacy
 	## python -m spacy download en_core_web_sm
@@ -43,11 +44,16 @@ config:
 	# python -m spacy init fill-config ./base_config_old.cfg ./configs/config_old.cfg
 	# python -m spacy init fill-config ./base_config_old_rel.cfg ./configs/config_old_rel.cfg -c ./scripts/custom_functions.py
 	# python -m spacy init fill-config ./base_config.cfg ./configs/config.cfg
+	# python -m spacy init fill-config ./base_config_rel.cfg ./configs/config_rel.cfg -c ./scripts/custom_functions.py
+	# python -m spacy init fill-config ./base_config_rel_only.cfg ./configs/config_rel_only.cfg -c ./scripts/custom_functions.py
 	# python -m spacy init fill-config ./base_config_tr.cfg ./configs/config_tr.cfg
 	# python -m spacy init fill-config ./base_config_tr_rel.cfg ./configs/config_tr_rel.cfg -c ./scripts/custom_functions.py
 
 debug:
 	# source .venv/bin/activate
+	# python -m spacy debug data ./configs/config.cfg
+	# python -m spacy debug data ./configs/config_rel.cfg -c ./scripts/custom_functions.py
+	# python -m spacy debug data ./configs/config_rel_only.cfg -c ./scripts/custom_functions.py
 	# python -m spacy debug data ./configs/config_tr.cfg
 	# python -m spacy debug data ./configs/config_tr_rel.cfg -c ./scripts/custom_functions.py
 
@@ -61,6 +67,8 @@ train:
 	# python -m spacy train ./configs/config_old.cfg --output ./models/v1
 	# python -m spacy train ./configs/config_old_rel.cfg --output ./models/v2 -c ./scripts/custom_functions.py
 	# python -m spacy train ./configs/config.cfg --output ./models/v3
+	# python -m spacy train ./configs/config_rel.cfg --output ./models/v2 -c ./scripts/custom_functions.py
+	# python -m spacy train ./configs/config_rel_only.cfg --output ./models/v3 -c ./scripts/custom_functions.py
 	# python -m spacy train ./configs/config_tr.cfg --output ./models/v4
 	# python -m spacy train ./configs/config_tr.cfg --output ./models/v5 --gpu-id 0
 	# python -m spacy train ./configs/config_tr_rel.cfg --output ./models/v6 --gpu-id 0 -c ./scripts/custom_functions.py
