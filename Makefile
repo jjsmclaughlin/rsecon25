@@ -31,6 +31,10 @@ prodigy_to_docbin:
 	# python prodigy_to_docbin.py jsonl/obp.jsonl docbins/valid.spacy 3271
 	# python prodigy_to_docbin.py jsonl/obp.jsonl docbins/train_rel.spacy 0 3270
 	# python prodigy_to_docbin.py jsonl/obp.jsonl docbins/valid_rel.spacy 3271
+	# python prodigy_to_docbin.py jsonl/obp.jsonl docbins/train_rel_tiny.spacy 0 70
+	# python prodigy_to_docbin.py jsonl/obp.jsonl docbins/valid_rel_tiny.spacy 71 90
+	# python prodigy_to_docbin.py jsonl/obp.jsonl docbins/train_rel_mini.spacy 0 140
+	# python prodigy_to_docbin.py jsonl/obp.jsonl docbins/valid_rel_mini.spacy 141 181
 
 config:
 	# source .venv/bin/activate
@@ -40,10 +44,12 @@ config:
 	# python -m spacy init fill-config ./base_config_old_rel.cfg ./configs/config_old_rel.cfg -c ./scripts/custom_functions.py
 	# python -m spacy init fill-config ./base_config.cfg ./configs/config.cfg
 	# python -m spacy init fill-config ./base_config_tr.cfg ./configs/config_tr.cfg
+	# python -m spacy init fill-config ./base_config_tr_rel.cfg ./configs/config_tr_rel.cfg -c ./scripts/custom_functions.py
 
 debug:
 	# source .venv/bin/activate
 	# python -m spacy debug data ./configs/config_tr.cfg
+	# python -m spacy debug data ./configs/config_tr_rel.cfg -c ./scripts/custom_functions.py
 
 gpu-test:
 	# source .venv/bin/activate
@@ -57,7 +63,7 @@ train:
 	# python -m spacy train ./configs/config.cfg --output ./models/v3
 	# python -m spacy train ./configs/config_tr.cfg --output ./models/v4
 	# python -m spacy train ./configs/config_tr.cfg --output ./models/v5 --gpu-id 0
-
+	# python -m spacy train ./configs/config_tr_rel.cfg --output ./models/v6 --gpu-id 0 -c ./scripts/custom_functions.py
 test:
 	# source .venv/bin/activate
 	# python test.py models/v1/model-best jsonl/obp.jsonl  100 101
