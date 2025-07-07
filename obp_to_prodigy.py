@@ -269,9 +269,9 @@ if ( __name__ == "__main__"):
     #print(json.dumps(prodigy[0]))
 
     # Remove the spans and rels we aren't interested in
-    for pdatum in prodigy:
-        pdatum['spans'] = list(filter(lambda x: x['label'] in ['DEFENDANT', 'GUILTY', 'NOTGUILTY'], pdatum['spans']))
-        pdatum['rels'] = list(filter(lambda x: x['label'] in ['DEFVER'], pdatum['rels']))
+    #for pdatum in prodigy:
+    #    pdatum['spans'] = list(filter(lambda x: x['label'] in ['DEFENDANT', 'GUILTY', 'NOTGUILTY'], pdatum['spans']))
+    #    pdatum['rels'] = list(filter(lambda x: x['label'] in ['DEFVER'], pdatum['rels']))
 
     # Find spans which overlap and alter the second span to have a start and end of -1
     for pdatum in prodigy:
@@ -297,38 +297,38 @@ if ( __name__ == "__main__"):
         pdatum['spans'] = list(filter(lambda x: x['end'] - x['start'] > 0, pdatum['spans']))
 
     # Add the correct head and child index values to each rel, using the uids to look them up
-    for pdatum in prodigy:
-
-        for rel in pdatum['rels']:
-
-            #print(rel['headuid'])
-
-            try:
-                rel['head'] = next(i for i,x in enumerate(pdatum['spans']) if 'uid' in x and x['uid'] == rel['headuid'])
-            except StopIteration:
-                #print('FAILED REL HEAD:' + rel['headuid']);
-                rel['head'] = None
-
-            #print(rel['childuid'])
-
-            try:
-                rel['child'] = next(i for i,x in enumerate(pdatum['spans']) if 'uid' in x and x['uid'] == rel['childuid'])
-            except StopIteration:
-                #print('FAILED REL CHILD:' + rel['childuid'])
-                rel['child'] = None
+    #for pdatum in prodigy:
+    #
+    #    for rel in pdatum['rels']:
+    #
+    #        #print(rel['headuid'])
+    #
+    #        try:
+    #            rel['head'] = next(i for i,x in enumerate(pdatum['spans']) if 'uid' in x and x['uid'] == rel['headuid'])
+    #        except StopIteration:
+    #            #print('FAILED REL HEAD:' + rel['headuid']);
+    #            rel['head'] = None
+    #
+    #        #print(rel['childuid'])
+    #
+    #        try:
+    #            rel['child'] = next(i for i,x in enumerate(pdatum['spans']) if 'uid' in x and x['uid'] == rel['childuid'])
+    #        except StopIteration:
+    #            #print('FAILED REL CHILD:' + rel['childuid'])
+    #            rel['child'] = None
 
     # Remove rels which no not have a valid head and child
-    for pdatum in prodigy:
-        pdatum['rels'] = list(filter(lambda x: x['head'] is not None and x['child'] is not None, pdatum['rels']))
+    #for pdatum in prodigy:
+    #    pdatum['rels'] = list(filter(lambda x: x['head'] is not None and x['child'] is not None, pdatum['rels']))
 
     # Slim down the prodigy by removing fields which are not strictly neccessary
-    for pdatum in prodigy:
-        del pdatum['uid']
-        for span in pdatum['spans']:
-            if 'uid' in span: del span['uid']
-        for rel in pdatum['rels']:
-            del rel['headuid']
-            del rel['childuid']
+    #for pdatum in prodigy:
+    #    del pdatum['uid']
+    #    for span in pdatum['spans']:
+    #        if 'uid' in span: del span['uid']
+    #    for rel in pdatum['rels']:
+    #        del rel['headuid']
+    #        del rel['childuid']
 
     #print(json.dumps(prodigy[0]))
 

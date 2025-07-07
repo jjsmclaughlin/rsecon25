@@ -25,6 +25,9 @@ obp_to_prodigy:
 	# source .venv/bin/activate
 	# python obp_to_prodigy.py
 
+# VICTIM, DEFENDANT, DEFENDANTHOME, OCCUPATION 
+# PERSPLACE, PERSOCC
+
 prodigy_to_docbin:
 	# source .venv/bin/activate
 	# training 70%, validation 20%, test 10%
@@ -36,7 +39,11 @@ prodigy_to_docbin:
 	# python prodigy_to_docbin.py jsonl/obp.jsonl docbins/valid_rel_tiny.spacy 71 90
 	# python prodigy_to_docbin.py jsonl/obp.jsonl docbins/train_rel_mini.spacy 0 140
 	# python prodigy_to_docbin.py jsonl/obp.jsonl docbins/valid_rel_mini.spacy 141 181
-
+	#
+	# python prodigy_to_docbin.py jsonl/obp.jsonl --ents=VICTIM:PER,DEFENDANT:PER,DEFENDANTHOME:PLA,OCCUPATION:OCC --rels=PERSPLACE:PERPLA,PERSOCC:PEROCC -s=0 -e=0
+	# python prodigy_to_docbin.py jsonl/obp.jsonl -s=0 -e=70 --ents=VICTIM:PER,DEFENDANT:PER,DEFENDANTHOME:PLA,OCCUPATION:OCC --rels=PERSPLACE:PERPLA,PERSOCC:PEROCC --outfile=docbins/train_rel_tiny.spacy
+	# python prodigy_to_docbin.py jsonl/obp.jsonl docbins/valid_rel_tiny.spacy 71 90
+	
 config:
 	# source .venv/bin/activate
 	# https://ner.pythonhumanities.com/03_02_train_spacy_ner_model.html
