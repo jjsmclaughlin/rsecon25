@@ -1,20 +1,10 @@
 #!/usr/bin/python3
 
-#import sys
 import argparse
 from tqdm import tqdm
 import json
 import spacy
 from spacy.tokens import DocBin, Doc
-
-#MAP_LABELS = {
-#    #"Pos-Reg": "Regulates",
-#    #"Neg-Reg": "Regulates",
-#    #"Reg": "Regulates",
-#    #"No-rel": "Regulates",
-#    #"Binds": "Binds",
-#    "DEFVER": "Defver",
-#}
 
 if ( __name__ == "__main__"):
 
@@ -26,18 +16,11 @@ if ( __name__ == "__main__"):
     parser.add_argument('-e', '--end', type=int, help='The line on which to stop reading the jsonl file (defaults to the final line in the file).')
     parser.add_argument('-en', '--ents', help='Comma separated list of ents to read from the jsonl file and after a colon, the desired name of each in the DocBin file. eg. VICTIM:PER,DEFENDANT:PER . If you specify this option, a line will not be included in the DocBin unless it has at least one qualifying ent.')
     parser.add_argument('-re', '--rels', help='Comma separated list of rels to read from the jsonl file and after a colon, the desired name of each in the DocBin file. eg. PERSPLACE:PERPLACE,PERSOCC:PEROCC . If you specify this option, a line will not be included in the DocBin unless it has at least one qualifying rel')
-    parser.add_argument('-max', '--maxsize', type=int, default=1000000,help='Maximum size in characters of the text field in each json line which will be included in the output DocBin. i.e. all lines with a longer text field will be omitted.')
-    parser.add_argument('-min', '--minsize', type=int, default=4, help='Minimum size in characters of the text field in each json line which will be included in the output DocBin. i.e. all lines with a shorter text field will be omitted.')
+    parser.add_argument('-max', '--maxlen', type=int, default=1000000,help='Maximum length in characters of the text field in each json line which will be included in the output DocBin. i.e. all lines with a longer text field will be omitted.')
+    parser.add_argument('-min', '--minlen', type=int, default=4, help='Minimum length in characters of the text field in each json line which will be included in the output DocBin. i.e. all lines with a shorter text field will be omitted.')
     parser.add_argument('-rmt', '--relmaxtok', type=int, default=100, help='The maximum number of tokens which a rel should be allowed to span. Relationships which span more tokens than this will be ignored.')
 
     args = parser.parse_args()
-
-#    print('  start: ' + str(args.start))
-#    print('    end: ' + str(args.end))
-#    print('   ents: ' + str(args.ents))
-#    print('   rels: ' + str(args.rels))
-#    print('maxsize: ' + str(args.maxsize))
-#    print('minsize: ' + str(args.minsize))
 
     ents = {}
 
@@ -58,18 +41,6 @@ if ( __name__ == "__main__"):
             rels[relkv[0]] = relkv[1]
 
         print('rels: ' + str(rels))
-
-
-#    if (args.infile and args.outfile):
-#
-#        print(' infile: ' + str(args.infile))
-#        print('outfile: ' + str(args.outfile))
-#
-#    else:
-#
-#        print('Need infile and outfile to do anything')
-#        parser.print_help()
-#        exit(1)
 
     print('infile: ' + str(args.infile))
 
@@ -107,7 +78,7 @@ if ( __name__ == "__main__"):
 
             jd = json.loads(jsonline)
             
-            if len(jd['text']) < args.minsize or len(jd['text']) > args.maxsize:
+            if len(jd['text']) < args.minlen or len(jd['text']) > args.maxlen:
 
                 suitable = False
 
@@ -144,28 +115,21 @@ if ( __name__ == "__main__"):
                         print()
                         exit(1)
 
-                    #print()
-                    #print('Assigned ents: ' + str(assigned_ents))
-                    #print()
-
                     if len(rels) > 0:
 
                         assigned_rels = 0
 
+                        # Filter out the rels which we are not interested in
                         filtered_rels = list(filter(lambda x: x['label'] in rels, jd['rels']))
 
                         # Add the correct head and child index values to each rel, using the uids to look them up                 
-                        for rel in filtered_rels:
-                    
-                            #print(rel['headuid'])
+                        for rel in filtered_rels:                  
                     
                             try:
                                 rel['head'] = next(i for i,x in enumerate(filtered_spans) if 'uid' in x and x['uid'] == rel['headuid'])
                             except StopIteration:
                                 #print('FAILED REL HEAD:' + rel['headuid']);
-                                rel['head'] = None
-                    
-                            #print(rel['childuid'])
+                                rel['head'] = None                  
                     
                             try:
                                 rel['child'] = next(i for i,x in enumerate(filtered_spans) if 'uid' in x and x['uid'] == rel['childuid'])
@@ -176,172 +140,92 @@ if ( __name__ == "__main__"):
                         # Remove rels which no not have a valid head and child
                         filtered_rels = list(filter(lambda x: x['head'] is not None and x['child'] is not None, filtered_rels))
 
-        #                print()
-        #                print(str(filtered_rels))
-        #                print()
-
-        #                # rels #################################################################
-        #
-        #                #print()
-        #                #print()
-        #                #print(json.dumps(pdatum))
-        #
-                        ent_starts = set()
+                        # Create a dictionary so we can look up each ent using its starting token
                         ent_starts_dict = {}
+                        for ent in doc.ents: ent_starts_dict[ent.start] = ent
 
-        #
-        #                print()
-        #                print()
-                        for ent in doc.ents:
-        #                    print(str(ent) + ' : ' + str(ent.start) + ' : ' + str(ent.end) + ' : ' + str(ent.label))
-                            ent_starts.add(ent.start)
-                            ent_starts_dict[ent.start] = ent
-        #                print()
-        #                print()
-        #
+                        # The structure of the spacy rels is a dictonary where the key is a tuple of the fist token of the head and the child ent
+                        # The value of each of these entries is a further dictionary where the keys are the relationship labels and the values are the likelihood of that relationship being correct
+                        # eg: {(2, 2): {'PERPLA': 0.0, 'PEROCC': 0.0}, (2, 26): {'PERPLA': 0.0, 'PEROCC': 0.0}, (26, 2): {'PERPLA': 0.0, 'PEROCC': 0.0}, (26, 26): {'PERPLA': 0.0, 'PEROCC': 0.0}}
                         spacy_rels = {}
-        #
-                        for x1 in ent_starts:
-                            for x2 in ent_starts:
+
+                        # First, use the ent_starts_dict to set up the empty dictionaries for each possible combination of entity start tokens
+                        for x1 in ent_starts_dict:
+                            for x2 in ent_starts_dict:
                                 spacy_rels[(x1, x2)] = {}
         
-        #                print()
-        #                print()
-        #                print(str(spacy_rels))
-        #                print()
-        #                print()
-        #
-                        for rel in filtered_rels:
-        #
-        #                    if rel['label'] in rels:
-        #
-        #                    # the 'head' and 'child' annotations refer to the end token in the span
-        #                    # but we want the first token
-        #                    # ... what?
 
-                                # you have headuid and childuid
-                                # you need to know the first token of those ents
+                        # Work through the rels we are interested in, assigining a value of 1.0 to the relevant relationship label for key representing that combination of ent starting tokens in the spacy_rels dictionary.
+                        for rel in filtered_rels:
 
                             start = doc.ents[rel['head']].start
                             end = doc.ents[rel['child']].start
                             label = rels[rel["label"]]
-        #
-        #                    if label in MAP_LABELS:
-        #                        rel_label = MAP_LABELS[label]
-        #                        if rel_label not in rels[(start, end)]:
 
-                            # Only assign the relationship if the spans are not too far apart
+                            # Only assign the relationship if the total range of tokens the model will have to consider is not too large
                             relfirsttok = min(doc.ents[rel['head']].start, doc.ents[rel['head']].end, doc.ents[rel['child']].start, doc.ents[rel['child']].end);
                             rellasttok = max(doc.ents[rel['head']].start, doc.ents[rel['head']].end, doc.ents[rel['child']].start, doc.ents[rel['child']].end);
                             if rellasttok - relfirsttok <= args.relmaxtok:
 
                                 spacy_rels[(start, end)][label] = 1.0
                                 assigned_rels += 1
-        #
-        #                    #print(json.dumps(pdatum))
-        #                    #print(start)
-        #                    #print(end)
-        #                    #print(label)
-        #                    
-        #
-                        # The annotation is complete, so fill in zero's where the data is missing
-                        for x1 in ent_starts:
-                            for x2 in ent_starts:
+
+                        # When we have finished assigning 1.0s (representing a correct relationship) where needed, fill in the rest of the labels with 0.0s (no relationship)
+                        for x1 in ent_starts_dict:
+                            for x2 in ent_starts_dict:
                                 for label in rels.values():
                                     if label not in spacy_rels[(x1, x2)]:
                                         spacy_rels[(x1, x2)][label] = 0.0
-        #
 
-                        #print()
-                        #print('Assigned rels: ' + str(assigned_rels))
-                        #print()
+                        # If we didn't assign any correct relationships, then this document is not suitable for inclusion in the docbin.
+                        if assigned_rels == 0: suitable = False
 
-                        if assigned_rels == 0:
-
-                            suitable = False
-
-                        #print()
-                        #print()
-                        #print(str(spacy_rels))
-                        #print()
-                        #print()
-
-
-        #                #print()
-        #                #print(rels)
-        #                #print()
-        #               
                         doc._.rel = spacy_rels
-        #
-        #                #print()
-        #                #print(doc._.rel)
-        #                #print()
-        #
-        #                for rel in doc._.rel:
-        #
-        #                    pass
-        #                    #print(str(rel[0]) + ' : ' + str(rel[1]) + ' : ' + str(doc._.rel[(rel[0], rel[1])]) + ' : ' + str(span_start_to_ent[rel[0]]) + ' : ' + str(span_start_to_ent[rel[1]]))
-        #                    #print(str(rel[0]) + ' : ' + str(rel[1]) + ' : ' + str(doc._.rel[(rel[0], rel[1])]))
-        #
-        #
-        #                #print()
-        #
-        #                # end of rels ##########################################################   
 
                 if args.outfile is None:
 
                     # If we have no outfile then we display lots of useful informtaion about the finished doc
                     print()
+                    print('----------------------------------------------------------------')
                     print()
                     print(doc)
                     print()
                     print('doc has ' + str(len(doc.ents)) + ' ents')
+                    print()
                     for idx, ent in enumerate(doc.ents):
-                        print(str(filtered_spans[idx]))
-                        print(str(ent.label) + ' ' + str(ent.start) + ' --> ' + str(ent.end) + ' ' + str(ent))
+                        print(ents[filtered_spans[idx]['label']] + ' ' + str(ent.label).ljust(20) + ' ' + str(ent.start).ljust(3) + '-> ' + str(ent.end).ljust(3) + ' ' + str(ent) + ' ' + str(filtered_spans[idx]))
                     print()
-                    print()
-                    print('doc has ' + str(assigned_rels) + ' rels')
+
                     if len(rels) > 0:
-                        print(str(doc._.rel))
-                        print()
+                        #print(str(doc._.rel))
+                        #print()
+                        print('doc has ' + str(assigned_rels) + ' assigned rels')
                         print()
                         for rel in doc._.rel:
                             head = rel[0]
                             child = rel[1]
                             vals = doc._.rel[(rel[0], rel[1])]
                             for val in vals:
-                                #print(val)
-                                #print(vals[val])
                                 if vals[val] > 0:
-                                    headidx = doc.ents.index(ent_starts_dict[head])
-                                    childidx = doc.ents.index(ent_starts_dict[child])
-                                    print(str(filtered_spans[headidx]))
-                                    print(str(filtered_spans[childidx]))
+                                    headent = ent_starts_dict[head]
+                                    childent = ent_starts_dict[child]
+                                    headidx = doc.ents.index(headent)
+                                    childidx = doc.ents.index(childent)
+                                    headspan = filtered_spans[headidx]
+                                    childspan = filtered_spans[childidx]
                                     print(val)
-                                    print(ent_starts_dict[head])
-                                    print(ent_starts_dict[head].start)
-                                    print(ent_starts_dict[head].end)
-                                    print(ent_starts_dict[child])
-                                    print(ent_starts_dict[child].start)
-                                    print(ent_starts_dict[child].end)
-                                   
-
-
-
-                    print()
-                    print()
+                                    print('+ ' + ents[headspan['label']] + ' ' + str(headent.label).ljust(20) + ' ' + str(headent.start).ljust(3) + '-> ' + str(headent.end).ljust(3) + ' ' + str(headent) + ' ' + str(headspan))
+                                    print('+ ' + ents[childspan['label']] + ' ' + str(childent.label).ljust(20) + ' ' + str(childent.start).ljust(3) + '-> ' + str(childent.end).ljust(3) + ' ' + str(childent) + ' ' + str(childspan))
+                                    print()                                  
 
                     if suitable:
 
                         print('Doc was added.')
                         print()
-                        print()
 
                     else:
 
                         print('Doc was not suitable.')
-                        print()
                         print()
 
             if suitable:
