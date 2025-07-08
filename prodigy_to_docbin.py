@@ -70,6 +70,7 @@ if ( __name__ == "__main__"):
 
         docs_attempted = 0
         docs_added = 0
+        rejected_spans = [];
 
         for jsonline in tqdm(jsonlines[args.start:end], ascii=True, ncols=60):
 
@@ -93,14 +94,47 @@ if ( __name__ == "__main__"):
                     # We need to keep a separate array of the ents we actually add, so that we can refer to them by position later on when we are adding the rels.
                     filtered_spans = list(filter(lambda x: x['label'] in ents, jd['spans']))
 
+                    # Find spans which overlap and alter the second span to have a start and end of -1
+                    for span in filtered_spans:
+                        for spanb in filtered_spans:
+                            if span != spanb:
+                                x_start = span['start']
+                                x_end = span['end']
+                                y_start = spanb['start']
+                                y_end = spanb['end']
+                                if x_start <= y_end and y_start <= x_end:
+                                #if x2 >= y1 and x1 <= y2:
+                                    #print('OVERLAP')
+                                    #print(json.dumps(span))
+                                    #print(json.dumps(spanb))
+                                    spanb['start'] = -1
+                                    spanb['end'] = -1
+                                    #spanb['overlap'] = True;
+                                    #print(json.dumps(pdatum))
+                        
+                    # Remove spans with zero length (should include the overlapping spans we just found)
+                    filtered_spans = list(filter(lambda x: x['end'] - x['start'] > 0, filtered_spans))
+
                     spacy_ents = []
                     
                     for span in filtered_spans:               
 
                         spacy_ent = doc.char_span(span['start'], span['end'], label=ents[span['label']])
-                        spacy_ents.append(spacy_ent)
-                        assigned_ents += 1
+
+                        if spacy_ent is None:
+
+                            rejected_spans.append(str(span) + ' Five chars either side: ***' + jd['text'][span['start'] - 5:span['end'] + 5] + '***')
+                            jd['rels'] = []
+                            suitable = False
+
+                        else:
+
+                            spacy_ents.append(spacy_ent)
+                            assigned_ents += 1
                     
+
+                    #print(spacy_ents)
+
                     try:
          
                         doc.ents = spacy_ents
@@ -234,6 +268,10 @@ if ( __name__ == "__main__"):
                 docs_added += 1
 
         print('Added ' + str(docs_added) + ' docs from ' + str(docs_attempted) + ' attempted (' + str((docs_added / docs_attempted) * 100) + '%).')
+
+        print(str(len(rejected_spans)) + ' rejected spans:')
+        for rejected_span in rejected_spans:
+            print(rejected_span)
 
         if args.outfile is not None:
 

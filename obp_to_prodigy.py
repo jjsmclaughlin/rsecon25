@@ -274,27 +274,27 @@ if ( __name__ == "__main__"):
     #    pdatum['rels'] = list(filter(lambda x: x['label'] in ['DEFVER'], pdatum['rels']))
 
     # Find spans which overlap and alter the second span to have a start and end of -1
-    for pdatum in prodigy:
-        for span in pdatum['spans']:
-            for spanb in pdatum['spans']:
-                if span != spanb:
-                    x_start = span['start']
-                    x_end = span['end']
-                    y_start = spanb['start']
-                    y_end = spanb['end']
-                    if x_start <= y_end and y_start <= x_end:
-                    #if x2 >= y1 and x1 <= y2:
-                        #print('OVERLAP')
-                        #print(json.dumps(span))
-                        #print(json.dumps(spanb))
-                        spanb['start'] = -1
-                        spanb['end'] = -1
-                        #spanb['overlap'] = True;
-                        #print(json.dumps(pdatum))
+    #for pdatum in prodigy:
+    #    for span in pdatum['spans']:
+    #        for spanb in pdatum['spans']:
+    #            if span != spanb:
+    #                x_start = span['start']
+    #                x_end = span['end']
+    #                y_start = spanb['start']
+    #                y_end = spanb['end']
+    #                if x_start <= y_end and y_start <= x_end:
+    #                #if x2 >= y1 and x1 <= y2:
+    #                    #print('OVERLAP')
+    #                    #print(json.dumps(span))
+    #                    #print(json.dumps(spanb))
+    #                    spanb['start'] = -1
+    #                    spanb['end'] = -1
+    #                    #spanb['overlap'] = True;
+    #                    #print(json.dumps(pdatum))
                         
     # Remove spans with zero length (should include the overlapping spans we just found)
-    for pdatum in prodigy:
-        pdatum['spans'] = list(filter(lambda x: x['end'] - x['start'] > 0, pdatum['spans']))
+    #for pdatum in prodigy:
+    #    pdatum['spans'] = list(filter(lambda x: x['end'] - x['start'] > 0, pdatum['spans']))
 
     # Add the correct head and child index values to each rel, using the uids to look them up
     #for pdatum in prodigy:
