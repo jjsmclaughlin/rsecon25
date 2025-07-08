@@ -1,6 +1,5 @@
 /.venv
 /jsonl
 /docbins
-/configs
 /models
 __pycache__/

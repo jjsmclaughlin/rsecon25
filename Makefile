@@ -48,20 +48,21 @@ prodigy_to_docbin:
 	# python prodigy_to_docbin.py jsonl/obp.jsonl --ents=VICTIM:PER,DEFENDANT:PER,DEFENDANTHOME:PLA,OCCUPATION:OCC --rels=PERSPLACE:PERPLA,PERSOCC:PEROCC --relmaxtok=32 --maxlen=300 -s0 -e800 --outfile=docbins/train_rel_only.spacy
 	# python prodigy_to_docbin.py jsonl/obp.jsonl --ents=VICTIM:PER,DEFENDANT:PER,DEFENDANTHOME:PLA,OCCUPATION:OCC --rels=PERSPLACE:PERPLA,PERSOCC:PEROCC --relmaxtok=32 --maxlen=300 -s801 -e1000 --outfile=docbins/valid_rel_only.spacy
 	# python prodigy_to_docbin.py jsonl/obp.jsonl --ents=VICTIM:PER,DEFENDANT:PER,DEFENDANTHOME:PLA,OCCUPATION:OCC --maxlen=300 -s1001 -e1100 --outfile=docbins/test_rel_only.spacy
+	# python prodigy_to_docbin.py jsonl/obp.jsonl --ents=VICTIM:PER,DEFENDANT:PER,DEFENDANTHOME:PLA,OCCUPATION:OCC --rels=PERSPLACE:PERPLA,PERSOCC:PEROCC --maxlen=300 -s1001 -e1100 --outfile=docbins/test_rel_only_complete.spacy
 
 config:
 	# source .venv/bin/activate
 	# https://ner.pythonhumanities.com/03_02_train_spacy_ner_model.html
 	# visit https://spacy.io/usage/training to generate a base_config.cfg
-	# python -m spacy init fill-config ./base_config_old.cfg ./configs/config_old.cfg
-	# python -m spacy init fill-config ./base_config_old_rel.cfg ./configs/config_old_rel.cfg -c ./scripts/custom_functions.py
-	# python -m spacy init fill-config ./base_config.cfg ./configs/config.cfg
-	# python -m spacy init fill-config ./base_config_rel.cfg ./configs/config_rel.cfg -c ./scripts/custom_functions.py
-	# python -m spacy init fill-config ./base_config_rel_only.cfg ./configs/config_rel_only.cfg -c ./scripts/custom_functions.py
-	# python -m spacy init fill-config ./base_config_tr.cfg ./configs/config_tr.cfg
-	# python -m spacy init fill-config ./base_config_tr_rel.cfg ./configs/config_tr_rel.cfg -c ./scripts/custom_functions.py
+	# python -m spacy init fill-config ./baseconfigs/base_config_old.cfg ./configs/config_old.cfg
+	# python -m spacy init fill-config ./baseconfigs/base_config_old_rel.cfg ./configs/config_old_rel.cfg -c ./scripts/custom_functions.py
+	# python -m spacy init fill-config ./baseconfigs/base_config.cfg ./configs/config.cfg
+	# python -m spacy init fill-config ./baseconfigs/base_config_rel.cfg ./configs/config_rel.cfg -c ./scripts/custom_functions.py
+	# python -m spacy init fill-config ./baseconfigs/base_config_rel_only.cfg ./configs/config_rel_only.cfg -c ./scripts/custom_functions.py
+	# python -m spacy init fill-config ./baseconfigs/base_config_tr.cfg ./configs/config_tr.cfg
+	# python -m spacy init fill-config ./baseconfigs/base_config_tr_rel.cfg ./configs/config_tr_rel.cfg -c ./scripts/custom_functions.py
 	#
-	# python -m spacy init fill-config ./rel_tok2vec.cfg ./configs/rel_toc2vec.cfg -c ./scripts/custom_functions.py
+	# python -m spacy init fill-config ./baseconfigs/rel_tok2vec.cfg ./configs/rel_toc2vec.cfg -c ./scripts/custom_functions.py
 
 debug:
 	# source .venv/bin/activate
@@ -98,4 +99,5 @@ test:
 	# python test_old.py models/v3/model-best jsonl/obp.jsonl 203 204
 	# python test_old.py models/v4/model-best jsonl/obp.jsonl 100 101
 	#
-	# python test.py ./models/v3/model-best ./docbins/test_rel_only.spacy
+	# python test.py ./models/v3/model-best ./docbins/test_rel_only_complete.spacy --copyents
+	# python test.py ./models/v1/model-best ./docbins/test_rel_only_complete.spacy

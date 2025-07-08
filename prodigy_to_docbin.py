@@ -250,7 +250,7 @@ if ( __name__ == "__main__"):
                                     print(val)
                                     print('+ ' + ents[headspan['label']] + ' ' + str(headent.label).ljust(20) + ' ' + str(headent.start).ljust(3) + '-> ' + str(headent.end).ljust(3) + ' ' + str(headent) + ' ' + str(headspan))
                                     print('+ ' + ents[childspan['label']] + ' ' + str(childent.label).ljust(20) + ' ' + str(childent.start).ljust(3) + '-> ' + str(childent.end).ljust(3) + ' ' + str(childent) + ' ' + str(childspan))
-                                    print()                                  
+                                    print()
 
                     if suitable:
 
