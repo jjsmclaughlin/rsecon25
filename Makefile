@@ -45,8 +45,15 @@ prodigy_to_docbin:
 	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/cri_dev.spacy -s3271 -e4205 --ents=GRANDLARCENY,THEFT,THEFTFROMPLACE,HIGHWAYROBBERY,SHOPLIFTING,POCKETPICKING,BURGLARY,RECEIVING,ANIMALTHEFT,ROBBERY,HOUSEBREAKING,BIGAMY,PERJURY,FORGERY,RAPE,PETTYLARCENY,FRAUD,COININGOFFENCES,INFANTICIDE,EXTORTION,PERVERTINGJUSTICE,KILL --maxlen=1000
 	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/cri_test.spacy -s4206 --ents=GRANDLARCENY,THEFT,THEFTFROMPLACE,HIGHWAYROBBERY,SHOPLIFTING,POCKETPICKING,BURGLARY,RECEIVING,ANIMALTHEFT,ROBBERY,HOUSEBREAKING,BIGAMY,PERJURY,FORGERY,RAPE,PETTYLARCENY,FRAUD,COININGOFFENCES,INFANTICIDE,EXTORTION,PERVERTINGJUSTICE,KILL --maxlen=1000
 	#
+	# crs: Crime span testing
+	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/crs_mini_train.spacy -s0 -e350 --spans=GRANDLARCENY,THEFT,THEFTFROMPLACE,HIGHWAYROBBERY,SHOPLIFTING --maxlen=300
+	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/crs_mini_dev.spacy -s351 -e451 --spans=GRANDLARCENY,THEFT,THEFTFROMPLACE,HIGHWAYROBBERY,SHOPLIFTING --maxlen=300
+	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/crs_mini_test.spacy -s452 -e501 --spans=GRANDLARCENY,THEFT,THEFTFROMPLACE,HIGHWAYROBBERY,SHOPLIFTING --maxlen=300
 	#
-	#
+	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/crs_train.spacy -s0 -e3270 --spans=GRANDLARCENY,THEFT,THEFTFROMPLACE,HIGHWAYROBBERY,SHOPLIFTING,POCKETPICKING,BURGLARY,RECEIVING,ANIMALTHEFT,ROBBERY,HOUSEBREAKING,BIGAMY,PERJURY,FORGERY,RAPE,PETTYLARCENY,FRAUD,COININGOFFENCES,INFANTICIDE,EXTORTION,PERVERTINGJUSTICE,KILL --maxlen=1000
+	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/crs_dev.spacy -s3271 -e4205 --spans=GRANDLARCENY,THEFT,THEFTFROMPLACE,HIGHWAYROBBERY,SHOPLIFTING,POCKETPICKING,BURGLARY,RECEIVING,ANIMALTHEFT,ROBBERY,HOUSEBREAKING,BIGAMY,PERJURY,FORGERY,RAPE,PETTYLARCENY,FRAUD,COININGOFFENCES,INFANTICIDE,EXTORTION,PERVERTINGJUSTICE,KILL --maxlen=1000
+	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/crs_test.spacy -s4206 --spans=GRANDLARCENY,THEFT,THEFTFROMPLACE,HIGHWAYROBBERY,SHOPLIFTING,POCKETPICKING,BURGLARY,RECEIVING,ANIMALTHEFT,ROBBERY,HOUSEBREAKING,BIGAMY,PERJURY,FORGERY,RAPE,PETTYLARCENY,FRAUD,COININGOFFENCES,INFANTICIDE,EXTORTION,PERVERTINGJUSTICE,KILL --maxlen=1000
+
 	# python prodigy_to_docbin.py jsonl/obp.jsonl docbins/train.spacy 0 3270
 	# python prodigy_to_docbin.py jsonl/obp.jsonl docbins/valid.spacy 3271
 	# python prodigy_to_docbin.py jsonl/obp.jsonl docbins/train_rel.spacy 0 3270
@@ -62,11 +69,17 @@ prodigy_to_docbin:
 
 config:
 	# source .venv/bin/activate
+	# python -m spacy init config ./baseconfigs/t2v_sps.cfg --lang en --pipeline spancat_singlelabel
+
+fillconfig:
+	# source .venv/bin/activate
 	# https://ner.pythonhumanities.com/03_02_train_spacy_ner_model.html
 	# visit https://spacy.io/usage/training to generate a base_config.cfg
 	#
 	# python -m spacy init fill-config ./baseconfigs/t2v_rel.cfg ./configs/t2v_rel.cfg -c ./scripts/custom_functions.py
 	# python -m spacy init fill-config ./baseconfigs/t2v_ner.cfg ./configs/t2v_ner.cfg
+	# python -m spacy init fill-config ./baseconfigs/t2v_ner.cfg ./configs/t2v_ner.cfg
+	# python -m spacy init fill-config ./baseconfigs/t2v_sps.cfg ./configs/t2v_sps.cfg
 	#
 	# python -m spacy init fill-config ./baseconfigs/base_config_old.cfg ./configs/config_old.cfg
 	# python -m spacy init fill-config ./baseconfigs/base_config_old_rel.cfg ./configs/config_old_rel.cfg -c ./scripts/custom_functions.py
@@ -84,6 +97,8 @@ debug:
 	# python -m spacy debug data ./configs/t2v_rel.cfg -c ./scripts/custom_functions.py --paths.train ./docbins/ppo_mini_train.spacy --paths.dev ./docbins/ppo_mini_dev.spacy
 	# python -m spacy debug data ./configs/t2v_ner.cfg --paths.train ./docbins/cri_mini_train.spacy --paths.dev ./docbins/cri_mini_dev.spacy
 	# python -m spacy debug data ./configs/t2v_ner.cfg --paths.train ./docbins/cri_train.spacy --paths.dev ./docbins/cri_dev.spacy
+	# python -m spacy debug data ./configs/t2v_sps.cfg --paths.train ./docbins/crs_mini_train.spacy --paths.dev ./docbins/crs_mini_dev.spacy
+	# python -m spacy debug data ./configs/t2v_sps.cfg --paths.train ./docbins/crs_train.spacy --paths.dev ./docbins/crs_dev.spacy
 	#
 	# python -m spacy debug data ./configs/config.cfg
 	# python -m spacy debug data ./configs/config_rel.cfg -c ./scripts/custom_functions.py
@@ -103,6 +118,8 @@ train:
 	# python -m spacy train ./configs/t2v_rel.cfg --output ./models/ppo_mini_t2v_rel -c ./scripts/custom_functions.py --paths.train ./docbins/ppo_mini_train.spacy --paths.dev ./docbins/ppo_mini_dev.spacy
 	# python -m spacy train ./configs/t2v_ner.cfg --output ./models/cri_mini_t2v_ner --paths.train ./docbins/cri_mini_train.spacy --paths.dev ./docbins/cri_mini_dev.spacy
 	# python -m spacy train ./configs/t2v_ner.cfg --output ./models/cri_t2v_ner --paths.train ./docbins/cri_train.spacy --paths.dev ./docbins/cri_dev.spacy
+	# python -m spacy train ./configs/t2v_sps.cfg --output ./models/crs_mini_t2v_sps --paths.train ./docbins/crs_mini_train.spacy --paths.dev ./docbins/crs_mini_dev.spacy
+	# python -m spacy train ./configs/t2v_sps.cfg --output ./models/crs_t2v_sps --paths.train ./docbins/crs_train.spacy --paths.dev ./docbins/crs_dev.spacy
 	#
 	####### python -m spacy train config.cfg --paths.train ./train.spacy --paths.dev ./dev.spacy
 	# python -m spacy train ./configs/config_old.cfg --output ./models/v1
@@ -121,6 +138,9 @@ test:
 	#
 	# python test.py ./models/ppo_mini_t2v_rel/model-best ./docbins/ppo_mini_test.spacy --copyents
 	# python test.py ./models/cri_mini_t2v_ner/model-best ./docbins/cri_mini_test.spacy
+	# python test.py ./models/cri_t2v_ner/model-best ./docbins/cri_test.spacy
+	# python test.py ./models/crs_mini_t2v_sps/model-best ./docbins/crs_mini_test.spacy
+	# python test.py ./models/crs_t2v_sps/model-best ./docbins/crs_test.spacy
 	#
 	# python test_old.py models/v1/model-best jsonl/obp.jsonl 100 101
 	# python test_old.py models/v2/model-best jsonl/obp.jsonl 101 102

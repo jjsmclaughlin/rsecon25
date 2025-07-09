@@ -15,6 +15,7 @@ if ( __name__ == "__main__"):
     parser.add_argument('-s', '--start', type=int, default=0, help='The line to begin reading the jsonl file from.')
     parser.add_argument('-e', '--end', type=int, help='The line on which to stop reading the jsonl file (defaults to the final line in the file).')
     parser.add_argument('-en', '--ents', help='Comma separated list of ents to read from the jsonl file. Optionally a substitute name can be specified after a colon. eg. VICTIM:PER,DEFENDANT:PER . If you specify this option, a line will not be included in the DocBin unless it has at least one qualifying ent.')
+    parser.add_argument('-sp', '--spans', help='Comma separated list of spans to read from the jsonl file. Optionally a substitute name can be specified after a colon. eg. VICTIM:PER,DEFENDANT:PER . If you specify this option, a line will not be included in the DocBin unless it has at least one qualifying span.')
     parser.add_argument('-re', '--rels', help='Comma separated list of rels to read from the jsonl file. Optionally a substitute name can be specified after a colon. eg. PERSPLACE:PERPLACE,PERSOCC:PEROCC . If you specify this option, a line will not be included in the DocBin unless it has at least one qualifying rel')
     parser.add_argument('-max', '--maxlen', type=int, default=1000000,help='Maximum length in characters of the text field in each json line which will be included in the output DocBin. i.e. all lines with a longer text field will be omitted.')
     parser.add_argument('-min', '--minlen', type=int, default=4, help='Minimum length in characters of the text field in each json line which will be included in the output DocBin. i.e. all lines with a shorter text field will be omitted.')
@@ -34,6 +35,19 @@ if ( __name__ == "__main__"):
                 ents[entdef] = entdef
 
         print('ents: ' + str(ents))
+
+    spans = {}
+
+    if args.spans:
+        spandefs = args.spans.split(',')
+        for spandef in spandefs:
+            if ':' in spandef:
+                spankv = spandef.split(':')
+                spans[spankv[0]] = spankv[1]
+            else:
+                spans[spandef] = spandef
+
+        print('spans: ' + str(spans))
 
     rels = {}
 
@@ -93,11 +107,80 @@ if ( __name__ == "__main__"):
 
                 doc = nlp(jd['text'])
 
+                if len(spans) > 0:
+
+                    assigned_spans = 0
+
+                    # We need to keep a separate array of the spans we actually add, so that we can refer to them by position later on when we are adding the rels.
+                    filtered_spans = list(filter(lambda x: x['label'] in spans, jd['spans']))
+
+                    # spans can overlap!
+
+                    # Find spans which overlap and alter the second span to have a start and end of -1
+                    #for span in filtered_spans:
+                    #    for spanb in filtered_spans:
+                    #        if span != spanb:
+                    #            x_start = span['start']
+                    #            x_end = span['end']
+                    #            y_start = spanb['start']
+                    #            y_end = spanb['end']
+                    #            if x_start <= y_end and y_start <= x_end:
+                    #            #if x2 >= y1 and x1 <= y2:
+                    #                #print('OVERLAP')
+                    #                #print(json.dumps(span))
+                    #                #print(json.dumps(spanb))
+                    #                spanb['start'] = -1
+                    #                spanb['end'] = -1
+                    #                #spanb['overlap'] = True;
+                    #                #print(json.dumps(pdatum))
+                        
+                    # Remove spans with zero length (probably souldn't be any?)
+                    filtered_spans = list(filter(lambda x: x['end'] - x['start'] > 0, filtered_spans))
+
+                    spacy_spans = []
+                    
+                    for span in filtered_spans:               
+
+                        spacy_span = doc.char_span(span['start'], span['end'], label=spans[span['label']])
+                        #spacy_span = Span(doc, span['start'], span['end'], label=spans[span['label']])
+
+                        if spacy_span is None:
+
+                            rejected_spans.append(str(span) + ' Five chars either side: ***' + jd['text'][span['start'] - 5:span['end'] + 5] + '***')
+                            jd['rels'] = []
+                            suitable = False
+
+                        else:
+
+                            spacy_spans.append(spacy_span)
+                            assigned_spans += 1
+                    
+
+                    #print(spacy_spans)
+
+                    # If we didn't assign any spans then this document is not suitable for inclusion in the docbin.
+                    if assigned_spans == 0: suitable = False
+
+                    try:
+         
+                        doc.spans['sc'] = spacy_spans
+
+                    except ValueError as exception:
+
+                        print()
+                        print()
+                        print(exception)
+                        print()
+                        print(jsonstr)
+                        print()
+                        exit(1)
+
+
                 if len(ents) > 0:
 
                     assigned_ents = 0
 
-                    # We need to keep a separate array of the ents we actually add, so that we can refer to them by position later on when we are adding the rels.
+                    # We need to keep a separate array of the spans we actually add, so that we can refer to them by position later on when we are adding the rels.
                     filtered_spans = list(filter(lambda x: x['label'] in ents, jd['spans']))
 
                     # Find spans which overlap and alter the second span to have a start and end of -1
@@ -233,11 +316,20 @@ if ( __name__ == "__main__"):
                     print()
                     print(doc)
                     print()
-                    print('doc has ' + str(len(doc.ents)) + ' ents')
-                    print()
-                    for idx, ent in enumerate(doc.ents):
-                        print(ents[filtered_spans[idx]['label']] + ' ' + str(ent.label).ljust(20) + ' ' + str(ent.start).ljust(3) + '-> ' + str(ent.end).ljust(3) + ' ' + str(ent) + ' ' + str(filtered_spans[idx]))
-                    print()
+
+                    if len(spans) > 0:
+                        print('doc has ' + str(len(doc.spans['sc'])) + ' spans')
+                        print()
+                        for idx, span in enumerate(doc.spans['sc']):
+                            print(str(span.label_).ljust(20) + ' ' + str(span.start).ljust(3) + '-> ' + str(span.end).ljust(3) + ' ' + str(span))
+                        print()
+
+                    if len(ents) > 0:
+                        print('doc has ' + str(len(doc.ents)) + ' ents')
+                        print()
+                        for idx, ent in enumerate(doc.ents):
+                            print(str(ent.label_).ljust(20) + ' ' + str(ent.start).ljust(3) + '-> ' + str(ent.end).ljust(3) + ' ' + str(ent))
+                        print()
 
                     if len(rels) > 0:
                         #print(str(doc._.rel))
@@ -254,11 +346,11 @@ if ( __name__ == "__main__"):
                                     childent = ent_starts_dict[child]
                                     headidx = doc.ents.index(headent)
                                     childidx = doc.ents.index(childent)
-                                    headspan = filtered_spans[headidx]
-                                    childspan = filtered_spans[childidx]
+                                    #headspan = filtered_spans[headidx]
+                                    #childspan = filtered_spans[childidx]
                                     print(val)
-                                    print('+ ' + ents[headspan['label']] + ' ' + str(headent.label).ljust(20) + ' ' + str(headent.start).ljust(3) + '-> ' + str(headent.end).ljust(3) + ' ' + str(headent) + ' ' + str(headspan))
-                                    print('+ ' + ents[childspan['label']] + ' ' + str(childent.label).ljust(20) + ' ' + str(childent.start).ljust(3) + '-> ' + str(childent.end).ljust(3) + ' ' + str(childent) + ' ' + str(childspan))
+                                    print('+ ' + str(headent.label_).ljust(20) + ' ' + str(headent.start).ljust(3) + '-> ' + str(headent.end).ljust(3) + ' ' + str(headent))
+                                    print('+ ' + str(childent.label_).ljust(20) + ' ' + str(childent.start).ljust(3) + '-> ' + str(childent.end).ljust(3) + ' ' + str(childent))
                                     print()
 
                     if suitable:
