@@ -332,6 +332,21 @@ if ( __name__ == "__main__"):
 
     #print(json.dumps(prodigy[0]))
 
+    labels = {}
+
+    for pdatum in prodigy:
+        for span in pdatum['spans']:
+            label = span['label']
+            if label in labels:
+                labels[label] += 1
+            else:
+                labels[label] = 1
+
+    labels_by_value = dict(sorted(labels.items(), key=lambda item: item[1], reverse=True))
+
+    for label in labels_by_value:
+        print(label + ' ' + str(labels_by_value[label]))
+
     random.shuffle(prodigy)
     jsonfile = open("jsonl/obp.jsonl", "w")
     for pdatum in prodigy:

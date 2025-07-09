@@ -98,35 +98,78 @@ if ( __name__ == "__main__"):
 
             #print(pred._.rel)
 
-            # print the ents in pred
-            for idx, ent in enumerate(pred.ents):
+            # print the ents in gold
+            print("GOLD ENTS:")
+            for idx, ent in enumerate(gold.ents):
                 #print(ents[filtered_spans[idx]['label']] + ' ' + str(ent.label).ljust(20) + ' ' + str(ent.start).ljust(3) + '-> ' + str(ent.end).ljust(3) + ' ' + str(ent) + ' ' + str(filtered_spans[idx]))
                 print(str(ent.label_).ljust(20) + ' ' + str(ent.start).ljust(3) + '-> ' + str(ent.end).ljust(3) + ' ' + str(ent))
             print()
 
-            # Create a dictionary so we can look up each ent using its starting token
-            ent_starts_dict = {}
-            for ent in pred.ents: ent_starts_dict[ent.start] = ent
+            if args.copyents is False:
 
-            # Print the rels in pred
-            for rel in pred._.rel:
-                head = rel[0]
-                child = rel[1]
-                vals = pred._.rel[(rel[0], rel[1])]
-                for val in vals:
-                    if vals[val] > 0.1:
-                        headent = ent_starts_dict[head]
-                        childent = ent_starts_dict[child]
-                        headidx = pred.ents.index(headent)
-                        childidx = pred.ents.index(childent)
-                        #headspan = filtered_spans[headidx]
-                        #childspan = filtered_spans[childidx]
-                        print(val + ' ' + str(vals[val]))
-                        #print('+ ' + ents[headspan['label']] + ' ' + str(headent.label).ljust(20) + ' ' + str(headent.start).ljust(3) + '-> ' + str(headent.end).ljust(3) + ' ' + str(headent) + ' ' + str(headspan))
-                        print('+ ' + str(headent.label_).ljust(20) + ' ' + str(headent.start).ljust(3) + '-> ' + str(headent.end).ljust(3) + ' ' + str(headent))
-                        #print('+ ' + ents[childspan['label']] + ' ' + str(childent.label).ljust(20) + ' ' + str(childent.start).ljust(3) + '-> ' + str(childent.end).ljust(3) + ' ' + str(childent) + ' ' + str(childspan))
-                        print('+ ' + str(childent.label_).ljust(20) + ' ' + str(childent.start).ljust(3) + '-> ' + str(childent.end).ljust(3) + ' ' + str(childent))
-                        print()
+                # print the ents in pred
+                print("PRED ENTS:")
+                for idx, ent in enumerate(pred.ents):
+                    #print(ents[filtered_spans[idx]['label']] + ' ' + str(ent.label).ljust(20) + ' ' + str(ent.start).ljust(3) + '-> ' + str(ent.end).ljust(3) + ' ' + str(ent) + ' ' + str(filtered_spans[idx]))
+                    print(str(ent.label_).ljust(20) + ' ' + str(ent.start).ljust(3) + '-> ' + str(ent.end).ljust(3) + ' ' + str(ent))
+                print()
+
+            if gold._.rel:
+
+                # Print the gold rels
+                print("GOLD RELS:")
+
+                # Create a dictionary so we can look up each ent using its starting token
+                gold_ent_starts_dict = {}
+                for ent in gold.ents: gold_ent_starts_dict[ent.start] = ent
+
+                for rel in gold._.rel:
+                    head = rel[0]
+                    child = rel[1]
+                    vals = gold._.rel[(rel[0], rel[1])]
+                    for val in vals:
+                        if vals[val] > 0.1:
+                            headent = gold_ent_starts_dict[head]
+                            childent = gold_ent_starts_dict[child]
+                            headidx = gold.ents.index(headent)
+                            childidx = gold.ents.index(childent)
+                            #headspan = filtered_spans[headidx]
+                            #childspan = filtered_spans[childidx]
+                            print(val + ' ' + str(vals[val]))
+                            #print('+ ' + ents[headspan['label']] + ' ' + str(headent.label).ljust(20) + ' ' + str(headent.start).ljust(3) + '-> ' + str(headent.end).ljust(3) + ' ' + str(headent) + ' ' + str(headspan))
+                            print('+ ' + str(headent.label_).ljust(20) + ' ' + str(headent.start).ljust(3) + '-> ' + str(headent.end).ljust(3) + ' ' + str(headent))
+                            #print('+ ' + ents[childspan['label']] + ' ' + str(childent.label).ljust(20) + ' ' + str(childent.start).ljust(3) + '-> ' + str(childent.end).ljust(3) + ' ' + str(childent) + ' ' + str(childspan))
+                            print('+ ' + str(childent.label_).ljust(20) + ' ' + str(childent.start).ljust(3) + '-> ' + str(childent.end).ljust(3) + ' ' + str(childent))
+                            print()
+
+
+            if pred._.rel:
+
+                # Print the pred rels
+                print("PRED RELS:")
+
+                # Create a dictionary so we can look up each ent using its starting token
+                pred_ent_starts_dict = {}
+                for ent in pred.ents: pred_ent_starts_dict[ent.start] = ent
+
+                for rel in pred._.rel:
+                    head = rel[0]
+                    child = rel[1]
+                    vals = pred._.rel[(rel[0], rel[1])]
+                    for val in vals:
+                        if vals[val] > 0.1:
+                            headent = pred_ent_starts_dict[head]
+                            childent = pred_ent_starts_dict[child]
+                            headidx = pred.ents.index(headent)
+                            childidx = pred.ents.index(childent)
+                            #headspan = filtered_spans[headidx]
+                            #childspan = filtered_spans[childidx]
+                            print(val + ' ' + str(vals[val]))
+                            #print('+ ' + ents[headspan['label']] + ' ' + str(headent.label).ljust(20) + ' ' + str(headent.start).ljust(3) + '-> ' + str(headent.end).ljust(3) + ' ' + str(headent) + ' ' + str(headspan))
+                            print('+ ' + str(headent.label_).ljust(20) + ' ' + str(headent.start).ljust(3) + '-> ' + str(headent.end).ljust(3) + ' ' + str(headent))
+                            #print('+ ' + ents[childspan['label']] + ' ' + str(childent.label).ljust(20) + ' ' + str(childent.start).ljust(3) + '-> ' + str(childent.end).ljust(3) + ' ' + str(childent) + ' ' + str(childspan))
+                            print('+ ' + str(childent.label_).ljust(20) + ' ' + str(childent.start).ljust(3) + '-> ' + str(childent.end).ljust(3) + ' ' + str(childent))
+                            print()
 
 
 

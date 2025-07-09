@@ -14,8 +14,8 @@ if ( __name__ == "__main__"):
     parser.add_argument('-o', '--outfile', help='The desired path and filename for the DocBin file which will be written. If this is not specified, the program will do a dry run, outputting debug information without saving a file.')
     parser.add_argument('-s', '--start', type=int, default=0, help='The line to begin reading the jsonl file from.')
     parser.add_argument('-e', '--end', type=int, help='The line on which to stop reading the jsonl file (defaults to the final line in the file).')
-    parser.add_argument('-en', '--ents', help='Comma separated list of ents to read from the jsonl file and after a colon, the desired name of each in the DocBin file. eg. VICTIM:PER,DEFENDANT:PER . If you specify this option, a line will not be included in the DocBin unless it has at least one qualifying ent.')
-    parser.add_argument('-re', '--rels', help='Comma separated list of rels to read from the jsonl file and after a colon, the desired name of each in the DocBin file. eg. PERSPLACE:PERPLACE,PERSOCC:PEROCC . If you specify this option, a line will not be included in the DocBin unless it has at least one qualifying rel')
+    parser.add_argument('-en', '--ents', help='Comma separated list of ents to read from the jsonl file. Optionally a substitute name can be specified after a colon. eg. VICTIM:PER,DEFENDANT:PER . If you specify this option, a line will not be included in the DocBin unless it has at least one qualifying ent.')
+    parser.add_argument('-re', '--rels', help='Comma separated list of rels to read from the jsonl file. Optionally a substitute name can be specified after a colon. eg. PERSPLACE:PERPLACE,PERSOCC:PEROCC . If you specify this option, a line will not be included in the DocBin unless it has at least one qualifying rel')
     parser.add_argument('-max', '--maxlen', type=int, default=1000000,help='Maximum length in characters of the text field in each json line which will be included in the output DocBin. i.e. all lines with a longer text field will be omitted.')
     parser.add_argument('-min', '--minlen', type=int, default=4, help='Minimum length in characters of the text field in each json line which will be included in the output DocBin. i.e. all lines with a shorter text field will be omitted.')
     parser.add_argument('-rmt', '--relmaxtok', type=int, default=100, help='The maximum number of tokens which a rel should be allowed to span. Relationships which span more tokens than this will be ignored.')
@@ -27,8 +27,11 @@ if ( __name__ == "__main__"):
     if args.ents:
         entdefs = args.ents.split(',')
         for entdef in entdefs:
-            entkv = entdef.split(':')
-            ents[entkv[0]] = entkv[1]
+            if ':' in entdef:
+                entkv = entdef.split(':')
+                ents[entkv[0]] = entkv[1]
+            else:
+                ents[entdef] = entdef
 
         print('ents: ' + str(ents))
 
@@ -37,8 +40,11 @@ if ( __name__ == "__main__"):
     if args.rels:
         reldefs = args.rels.split(',')
         for reldef in reldefs:
-            relkv = reldef.split(':')
-            rels[relkv[0]] = relkv[1]
+            if ':' in reldef:
+                relkv = reldef.split(':')
+                rels[relkv[0]] = relkv[1]
+            else:
+                rels[reldef] = reldef
 
         print('rels: ' + str(rels))
 
@@ -134,6 +140,9 @@ if ( __name__ == "__main__"):
                     
 
                     #print(spacy_ents)
+
+                    # If we didn't assign any ents then this document is not suitable for inclusion in the docbin.
+                    if assigned_ents == 0: suitable = False
 
                     try:
          
