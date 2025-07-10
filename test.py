@@ -6,7 +6,7 @@ import spacy
 import json
 from spacy.tokens import DocBin, Doc
 from spacy.training.example import Example
-from spacy.scorer import Scorer
+#from spacy.scorer import Scorer
 
 # make the factory work
 from scripts.rel_pipe import make_relation_extractor, score_relations
@@ -100,31 +100,34 @@ if ( __name__ == "__main__"):
             #print(pred._.rel)
 
             # print the spans in gold
-            print("GOLD SPANS:")
-            for idx, span in enumerate(gold.spans['sc']):
-                #print(ents[filtered_spans[idx]['label']] + ' ' + str(ent.label).ljust(20) + ' ' + str(ent.start).ljust(3) + '-> ' + str(ent.end).ljust(3) + ' ' + str(ent) + ' ' + str(filtered_spans[idx]))
-                print(str(span.label_).ljust(20) + ' ' + str(span.start).ljust(3) + '-> ' + str(span.end).ljust(3) + ' ' + str(span))
-            print()
+            if 'sc' in gold.spans:
+                print("GOLD SPANS:")
+                for span in gold.spans['sc']:
+                    #print(ents[filtered_spans[idx]['label']] + ' ' + str(ent.label).ljust(20) + ' ' + str(ent.start).ljust(3) + '-> ' + str(ent.end).ljust(3) + ' ' + str(ent) + ' ' + str(filtered_spans[idx]))
+                    print(str(span.label_).ljust(20) + ' ' + str(span.start).ljust(3) + '-> ' + str(span.end).ljust(3) + ' ' + str(span))
+                print()
 
             # print the spans in pred
-            print("PRED SPANS:")
-            for idx, span in enumerate(pred.spans['sc']):
-                #print(ents[filtered_spans[idx]['label']] + ' ' + str(ent.label).ljust(20) + ' ' + str(ent.start).ljust(3) + '-> ' + str(ent.end).ljust(3) + ' ' + str(ent) + ' ' + str(filtered_spans[idx]))
-                print(str(span.label_).ljust(20) + ' ' + str(span.start).ljust(3) + '-> ' + str(span.end).ljust(3) + ' ' + str(span))
-            print()
+            if 'sc' in pred.spans:
+                print("PRED SPANS:")
+                for span, confidence in zip(pred.spans['sc'], pred.spans['sc'].attrs["scores"]):
+                    #print(ents[filtered_spans[idx]['label']] + ' ' + str(ent.label).ljust(20) + ' ' + str(ent.start).ljust(3) + '-> ' + str(ent.end).ljust(3) + ' ' + str(ent) + ' ' + str(filtered_spans[idx]))
+                    print(str(span.label_).ljust(20) + ' ' + str(confidence).ljust(12) + ' ' + str(span.start).ljust(3) + '-> ' + str(span.end).ljust(3) + ' ' + str(span))
+                print()
 
             # print the ents in gold
-            print("GOLD ENTS:")
-            for idx, ent in enumerate(gold.ents):
-                #print(ents[filtered_spans[idx]['label']] + ' ' + str(ent.label).ljust(20) + ' ' + str(ent.start).ljust(3) + '-> ' + str(ent.end).ljust(3) + ' ' + str(ent) + ' ' + str(filtered_spans[idx]))
-                print(str(ent.label_).ljust(20) + ' ' + str(ent.start).ljust(3) + '-> ' + str(ent.end).ljust(3) + ' ' + str(ent))
-            print()
+            if gold.ents:
+                print("GOLD ENTS:")
+                for ent in gold.ents:
+                    #print(ents[filtered_spans[idx]['label']] + ' ' + str(ent.label).ljust(20) + ' ' + str(ent.start).ljust(3) + '-> ' + str(ent.end).ljust(3) + ' ' + str(ent) + ' ' + str(filtered_spans[idx]))
+                    print(str(ent.label_).ljust(20) + ' ' + str(ent.start).ljust(3) + '-> ' + str(ent.end).ljust(3) + ' ' + str(ent))
+                print()
 
-            if args.copyents is False:
+            if pred.ents and args.copyents is False:
 
                 # print the ents in pred
                 print("PRED ENTS:")
-                for idx, ent in enumerate(pred.ents):
+                for ent in pred.ents:
                     #print(ents[filtered_spans[idx]['label']] + ' ' + str(ent.label).ljust(20) + ' ' + str(ent.start).ljust(3) + '-> ' + str(ent.end).ljust(3) + ' ' + str(ent) + ' ' + str(filtered_spans[idx]))
                     print(str(ent.label_).ljust(20) + ' ' + str(ent.start).ljust(3) + '-> ' + str(ent.end).ljust(3) + ' ' + str(ent))
                 print()
@@ -188,15 +191,19 @@ if ( __name__ == "__main__"):
 
 
 
-    scorer = Scorer()
-    print(json.dumps(scorer.score(examples), sort_keys=True, indent=4))
+    #scorer = Scorer()
+    #print(json.dumps(scorer.score(examples), sort_keys=True, indent=4))
 
-    # Threshold is the cutoff to consider a prediction "positive". The docs for relation_extractor say this should be 0.5
-    thresholds = [0.000, 0.050, 0.100, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.99, 0.999]
+    #print(json.dumps(scorer.score_spans(examples, "spans"), sort_keys=True, indent=4))
 
-    print()
-    print("Results of the trained model:")
-    _score_and_format(examples, thresholds)
+    if pred._.rel:
+
+        # Threshold is the cutoff to consider a prediction "positive". The docs for relation_extractor say this should be 0.5
+        thresholds = [0.000, 0.050, 0.100, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.99, 0.999]
+
+        print()
+        print("Results of the trained model:")
+        _score_and_format(examples, thresholds)
 
 
 #    print(args.infile)
