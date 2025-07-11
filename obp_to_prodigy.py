@@ -135,34 +135,17 @@ class TEIHandler(xml.sax.ContentHandler):
 
             startidx = self.inside[tag]
             endidx = len(self.text)
-            #print(str(startidx) + ' -> ' + str(endidx))
-            #if startidx == None or endidx == None or tag == None:
-            #    print('None')
-            #    exit(1)
 
             if endidx > startidx: # ignore empty labels
 
                 text = self.text[startidx:endidx]
 
-                # Special process for offences
-                #if tag == 'HOUSEBREAKING':
-                #    res = re.search(r"breaking and entering", text)
-                #    if res:
-                #        startidx = startidx + res.span()[0]
-                #        endidx = startidx + res.span()[1]
-                #        text = self.text[startidx:endidx]
-
-                numsearch = re.search(r"[0-9]", text) # Spacy does not like numbers in entities
+                numsearch = re.search(r"[0-9]", text) # SpaCy does not like numbers in entities
                 if numsearch:
-                    #print(numsearch)
-                    #print('**' + text + '**')
                     endidx = startidx + numsearch.span()[0] - 1
                     text = self.text[startidx:endidx]
-                    #print('**' + text + '**')
-                    #exit(1)
-                #if self.text[startidx] == ' ': # Sometimes the tagging includes a space at the start
-                #    startidx = startidx + 1
 
+                # SpaCy does not like a space at the start or end of a span. It makes the token boundaries not correllate with the span start and end character positions.
                 if text.startswith(' '):
                     startidx = startidx + 1
                     text = self.text[startidx:endidx]
@@ -171,13 +154,8 @@ class TEIHandler(xml.sax.ContentHandler):
                     endidx = endidx - 1
                     text = self.text[startidx:endidx]
 
-                #valid = True
-                #if re.search(r"[0-9]", text): valid = False # Spacy does not seem to like entites with numbers in some configurations
-                #if valid: self.labels.append((startidx, endidx, tag))
-
                 if len(text) > 0: # Last check that we still have a label left
 
-                    #self.labels.append((startidx, endidx, tag))
                     jsn = {}
 
                     jsn['label'] = tag
@@ -190,29 +168,13 @@ class TEIHandler(xml.sax.ContentHandler):
 
                     self.labels.append(jsn)
 
-        if tag == 'DIV':
-            
-            #print('\n' + self.text)
-            #for label in self.labels:
-            #    print(label)
-            #    print('**' + self.text[label[0]:label[1]] + '**')
-
-            #prodigy = [
-            #    ("Tokyo Tower is 333m tall.", [(0, 11, "BUILDING")]),
-            #]
-
-            #if self.text == None or self.labels == None:
-            #    print('None')
-            #    exit(1)
+        if tag == 'DIV':         
 
             jsn = {}
             jsn['uid'] = self.uid
             jsn['text'] = self.text
             jsn['spans'] = self.labels
             jsn['rels'] = self.rels
-            #jsn['rels'] = relations
-
-            #prodigy.append((self.text, self.labels))
 
             prodigy.append(jsn)
 
@@ -222,7 +184,6 @@ class TEIHandler(xml.sax.ContentHandler):
             self.inside = {}
             self.attributes = {}
             self.uid = ''
-            #self.intrial = False
 
     def characters(self, content):
         pass
@@ -252,101 +213,53 @@ if ( __name__ == "__main__"):
     Handler = TEIHandler()
     parser.setContentHandler(Handler)
 
-    #todo = todo[:1]
-
     for file in todo:
 
-        print(file)
         root = etree.parse(file)
-        xslt_version = xslt(root)
 
-        data = etree.tostring(xslt_version, encoding='unicode', method='xml')
-        #print(data)
+        transformed_version = xslt(root)
 
-        xml.sax.parseString(data, Handler)
+        transformed_version_as_string = etree.tostring(transformed_version, encoding='unicode', method='xml')
 
-    #print(len(prodigy))
-    #print(json.dumps(prodigy[0]))
+        xml.sax.parseString(transformed_version_as_string, Handler)
 
-    # Remove the spans and rels we aren't interested in
-    #for pdatum in prodigy:
-    #    pdatum['spans'] = list(filter(lambda x: x['label'] in ['DEFENDANT', 'GUILTY', 'NOTGUILTY'], pdatum['spans']))
-    #    pdatum['rels'] = list(filter(lambda x: x['label'] in ['DEFVER'], pdatum['rels']))
-
-    # Find spans which overlap and alter the second span to have a start and end of -1
-    #for pdatum in prodigy:
-    #    for span in pdatum['spans']:
-    #        for spanb in pdatum['spans']:
-    #            if span != spanb:
-    #                x_start = span['start']
-    #                x_end = span['end']
-    #                y_start = spanb['start']
-    #                y_end = spanb['end']
-    #                if x_start <= y_end and y_start <= x_end:
-    #                #if x2 >= y1 and x1 <= y2:
-    #                    #print('OVERLAP')
-    #                    #print(json.dumps(span))
-    #                    #print(json.dumps(spanb))
-    #                    spanb['start'] = -1
-    #                    spanb['end'] = -1
-    #                    #spanb['overlap'] = True;
-    #                    #print(json.dumps(pdatum))
-                        
-    # Remove spans with zero length (should include the overlapping spans we just found)
-    #for pdatum in prodigy:
-    #    pdatum['spans'] = list(filter(lambda x: x['end'] - x['start'] > 0, pdatum['spans']))
-
-    # Add the correct head and child index values to each rel, using the uids to look them up
-    #for pdatum in prodigy:
-    #
-    #    for rel in pdatum['rels']:
-    #
-    #        #print(rel['headuid'])
-    #
-    #        try:
-    #            rel['head'] = next(i for i,x in enumerate(pdatum['spans']) if 'uid' in x and x['uid'] == rel['headuid'])
-    #        except StopIteration:
-    #            #print('FAILED REL HEAD:' + rel['headuid']);
-    #            rel['head'] = None
-    #
-    #        #print(rel['childuid'])
-    #
-    #        try:
-    #            rel['child'] = next(i for i,x in enumerate(pdatum['spans']) if 'uid' in x and x['uid'] == rel['childuid'])
-    #        except StopIteration:
-    #            #print('FAILED REL CHILD:' + rel['childuid'])
-    #            rel['child'] = None
-
-    # Remove rels which no not have a valid head and child
-    #for pdatum in prodigy:
-    #    pdatum['rels'] = list(filter(lambda x: x['head'] is not None and x['child'] is not None, pdatum['rels']))
-
-    # Slim down the prodigy by removing fields which are not strictly neccessary
-    #for pdatum in prodigy:
-    #    del pdatum['uid']
-    #    for span in pdatum['spans']:
-    #        if 'uid' in span: del span['uid']
-    #    for rel in pdatum['rels']:
-    #        del rel['headuid']
-    #        del rel['childuid']
-
-    #print(json.dumps(prodigy[0]))
-
-    labels = {}
+    # Spit out a list of the labels we found
+    span_labels = {}
 
     for pdatum in prodigy:
         for span in pdatum['spans']:
-            label = span['label']
-            if label in labels:
-                labels[label] += 1
+            span_label = span['label']
+            if span_label in span_labels:
+                span_labels[span_label] += 1
             else:
-                labels[label] = 1
+                span_labels[span_label] = 1
 
-    labels_by_value = dict(sorted(labels.items(), key=lambda item: item[1], reverse=True))
+    span_labels_by_value = dict(sorted(span_labels.items(), key=lambda item: item[1], reverse=True))
 
-    for label in labels_by_value:
-        print(label + ' ' + str(labels_by_value[label]))
+    print()
+    print("Span Labels: ")
+    for span_label in span_labels_by_value:
+        print(span_label + ' ' + str(span_labels_by_value[span_label]))
 
+    # Spit out a list of the rels we found
+    rel_labels = {}
+
+    for pdatum in prodigy:
+        for rel in pdatum['rels']:
+            rel_label = rel['label']
+            if rel_label in rel_labels:
+                rel_labels[rel_label] += 1
+            else:
+                rel_labels[rel_label] = 1
+
+    rel_labels_by_value = dict(sorted(rel_labels.items(), key=lambda item: item[1], reverse=True))
+
+    print()
+    print("Rel Labels: ")
+    for rel_label in rel_labels_by_value:
+        print(rel_label + ' ' + str(rel_labels_by_value[rel_label]))
+
+    # Save our jsonl
     random.shuffle(prodigy)
     jsonfile = open("jsonl/obp.jsonl", "w")
     for pdatum in prodigy:

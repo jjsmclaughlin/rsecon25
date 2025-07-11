@@ -16,9 +16,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 </xsl:template>
 
 <xsl:template match="persName[@type='defendantName']">
-    <!--<xsl:if test="not(ancestor::persName)"> no overlapping labels -->
         <DEFENDANT id="{@id}"><xsl:apply-templates/></DEFENDANT>
-    <!--</xsl:if>-->
 </xsl:template>
 
 <xsl:template match="persName[@type='victimName']">

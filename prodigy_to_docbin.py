@@ -81,8 +81,8 @@ if ( __name__ == "__main__"):
 
         if len(rels) > 0:
 
-            Doc.set_extension("rel", default={}) # rels
-            db = DocBin(store_user_data=True) # rels
+            Doc.set_extension("rel", default={})
+            db = DocBin(store_user_data=True)
 
         else:
 
@@ -111,28 +111,10 @@ if ( __name__ == "__main__"):
 
                     assigned_spans = 0
 
-                    # We need to keep a separate array of the spans we actually add, so that we can refer to them by position later on when we are adding the rels.
+                    # Filter the spans in the same way as the ents for consistency.
                     filtered_spans = list(filter(lambda x: x['label'] in spans, jd['spans']))
 
-                    # spans can overlap!
-
-                    # Find spans which overlap and alter the second span to have a start and end of -1
-                    #for span in filtered_spans:
-                    #    for spanb in filtered_spans:
-                    #        if span != spanb:
-                    #            x_start = span['start']
-                    #            x_end = span['end']
-                    #            y_start = spanb['start']
-                    #            y_end = spanb['end']
-                    #            if x_start <= y_end and y_start <= x_end:
-                    #            #if x2 >= y1 and x1 <= y2:
-                    #                #print('OVERLAP')
-                    #                #print(json.dumps(span))
-                    #                #print(json.dumps(spanb))
-                    #                spanb['start'] = -1
-                    #                spanb['end'] = -1
-                    #                #spanb['overlap'] = True;
-                    #                #print(json.dumps(pdatum))
+                    # Unlike ents, spans can overlap. So no need to remove overlapping spans.
                         
                     # Remove spans with zero length (probably souldn't be any?)
                     filtered_spans = list(filter(lambda x: x['end'] - x['start'] > 0, filtered_spans))
@@ -142,7 +124,6 @@ if ( __name__ == "__main__"):
                     for span in filtered_spans:               
 
                         spacy_span = doc.char_span(span['start'], span['end'], label=spans[span['label']])
-                        #spacy_span = Span(doc, span['start'], span['end'], label=spans[span['label']])
 
                         if spacy_span is None:
 
@@ -155,9 +136,6 @@ if ( __name__ == "__main__"):
                             spacy_spans.append(spacy_span)
                             assigned_spans += 1
                     
-
-                    #print(spacy_spans)
-
                     # If we didn't assign any spans then this document is not suitable for inclusion in the docbin.
                     if assigned_spans == 0: suitable = False
 
@@ -220,9 +198,6 @@ if ( __name__ == "__main__"):
 
                             spacy_ents.append(spacy_ent)
                             assigned_ents += 1
-                    
-
-                    #print(spacy_ents)
 
                     # If we didn't assign any ents then this document is not suitable for inclusion in the docbin.
                     if assigned_ents == 0: suitable = False
@@ -263,7 +238,7 @@ if ( __name__ == "__main__"):
                                 #print('FAILED REL CHILD:' + rel['childuid'])
                                 rel['child'] = None
 
-                        # Remove rels which no not have a valid head and child
+                        # Remove rels which no not have a valid head and a valid child
                         filtered_rels = list(filter(lambda x: x['head'] is not None and x['child'] is not None, filtered_rels))
 
                         # Create a dictionary so we can look up each ent using its starting token
@@ -310,7 +285,7 @@ if ( __name__ == "__main__"):
 
                 if args.outfile is None:
 
-                    # If we have no outfile then we display lots of useful informtaion about the finished doc
+                    # If we have no outfile then we display useful informtaion about the finished doc
                     print()
                     print('----------------------------------------------------------------')
                     print()
@@ -332,8 +307,6 @@ if ( __name__ == "__main__"):
                         print()
 
                     if len(rels) > 0:
-                        #print(str(doc._.rel))
-                        #print()
                         print('doc has ' + str(assigned_rels) + ' assigned rels')
                         print()
                         for rel in doc._.rel:
@@ -346,8 +319,6 @@ if ( __name__ == "__main__"):
                                     childent = ent_starts_dict[child]
                                     headidx = doc.ents.index(headent)
                                     childidx = doc.ents.index(childent)
-                                    #headspan = filtered_spans[headidx]
-                                    #childspan = filtered_spans[childidx]
                                     print(val)
                                     print('+ ' + str(headent.label_).ljust(20) + ' ' + str(headent.start).ljust(3) + '-> ' + str(headent.end).ljust(3) + ' ' + str(headent))
                                     print('+ ' + str(childent.label_).ljust(20) + ' ' + str(childent.start).ljust(3) + '-> ' + str(childent.end).ljust(3) + ' ' + str(childent))
