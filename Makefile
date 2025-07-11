@@ -71,21 +71,6 @@ prodigy_to_docbin:
 	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/pus_train.spacy -s0 -e3270 --spans=TRANSPORT,DEATH,BRANDING,WHIPPING --maxlen=1000
 	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/pus_dev.spacy -s3271 -e4205 --spans=TRANSPORT,DEATH,BRANDING,WHIPPING --maxlen=1000
 	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/pus_test.spacy -s4206 --spans=TRANSPORT,DEATH,BRANDING,WHIPPING --maxlen=1000
-	#
-	#
-	#
-	# python prodigy_to_docbin.py jsonl/obp.jsonl docbins/train.spacy 0 3270
-	# python prodigy_to_docbin.py jsonl/obp.jsonl docbins/valid.spacy 3271
-	# python prodigy_to_docbin.py jsonl/obp.jsonl docbins/train_rel.spacy 0 3270
-	# python prodigy_to_docbin.py jsonl/obp.jsonl docbins/valid_rel.spacy 3271
-	# python prodigy_to_docbin.py jsonl/obp.jsonl docbins/train_rel_tiny.spacy 0 70
-	# python prodigy_to_docbin.py jsonl/obp.jsonl docbins/valid_rel_tiny.spacy 71 90
-	# python prodigy_to_docbin.py jsonl/obp.jsonl docbins/train_rel_mini.spacy 0 140
-	# python prodigy_to_docbin.py jsonl/obp.jsonl docbins/valid_rel_mini.spacy 141 181
-	#
-	# python prodigy_to_docbin.py jsonl/obp.jsonl --ents=VICTIM:PER,DEFENDANT:PER,DEFENDANTHOME:PLA,OCCUPATION:OCC --rels=PERSPLACE:PERPLA,PERSOCC:PEROCC -s=0 -e=0
-	# python prodigy_to_docbin.py jsonl/obp.jsonl -s=0 -e=70 --ents=VICTIM:PER,DEFENDANT:PER,DEFENDANTHOME:PLA,OCCUPATION:OCC --rels=PERSPLACE:PERPLA,PERSOCC:PEROCC --outfile=docbins/train_rel_tiny.spacy
-	# python prodigy_to_docbin.py jsonl/obp.jsonl docbins/valid_rel_tiny.spacy 71 90
 
 config:
 	# source .venv/bin/activate
@@ -99,26 +84,15 @@ fillconfig:
 	# https://ner.pythonhumanities.com/03_02_train_spacy_ner_model.html
 	# visit https://spacy.io/usage/training to generate a base_config.cfg
 	#
-	# python -m spacy init fill-config ./baseconfigs/t2v_rel.cfg ./configs/t2v_rel.cfg -c ./scripts/custom_functions.py
-	# python -m spacy init fill-config ./baseconfigs/t2v_ner.cfg ./configs/t2v_ner.cfg
+	# python -m spacy init fill-config ./baseconfigs/t2v_rel.cfg ./configs/t2v_rel.cfg -c ./relation_extractor/custom_functions.py
 	# python -m spacy init fill-config ./baseconfigs/t2v_ner.cfg ./configs/t2v_ner.cfg
 	# python -m spacy init fill-config ./baseconfigs/t2v_sps.cfg ./configs/t2v_sps.cfg
 	# python -m spacy init fill-config ./baseconfigs/t2v_spc.cfg ./configs/t2v_spc.cfg
-	#
-	# python -m spacy init fill-config ./baseconfigs/base_config_old.cfg ./configs/config_old.cfg
-	# python -m spacy init fill-config ./baseconfigs/base_config_old_rel.cfg ./configs/config_old_rel.cfg -c ./scripts/custom_functions.py
-	# python -m spacy init fill-config ./baseconfigs/base_config.cfg ./configs/config.cfg
-	# python -m spacy init fill-config ./baseconfigs/base_config_rel.cfg ./configs/config_rel.cfg -c ./scripts/custom_functions.py
-	# python -m spacy init fill-config ./baseconfigs/base_config_rel_only.cfg ./configs/config_rel_only.cfg -c ./scripts/custom_functions.py
-	# python -m spacy init fill-config ./baseconfigs/base_config_tr.cfg ./configs/config_tr.cfg
-	# python -m spacy init fill-config ./baseconfigs/base_config_tr_rel.cfg ./configs/config_tr_rel.cfg -c ./scripts/custom_functions.py
-	#
-	# python -m spacy init fill-config ./baseconfigs/rel_tok2vec.cfg ./configs/rel_toc2vec.cfg -c ./scripts/custom_functions.py
 
 debug:
 	# source .venv/bin/activate
 	#
-	# python -m spacy debug data ./configs/t2v_rel.cfg -c ./scripts/custom_functions.py --paths.train ./docbins/ppo_mini_train.spacy --paths.dev ./docbins/ppo_mini_dev.spacy
+	# python -m spacy debug data ./configs/t2v_rel.cfg -c ./relation_extractor/custom_functions.py --paths.train ./docbins/ppo_mini_train.spacy --paths.dev ./docbins/ppo_mini_dev.spacy
 	# python -m spacy debug data ./configs/t2v_ner.cfg --paths.train ./docbins/cri_mini_train.spacy --paths.dev ./docbins/cri_mini_dev.spacy
 	# python -m spacy debug data ./configs/t2v_ner.cfg --paths.train ./docbins/cri_train.spacy --paths.dev ./docbins/cri_dev.spacy
 	# python -m spacy debug data ./configs/t2v_sps.cfg --paths.train ./docbins/crs_mini_train.spacy --paths.dev ./docbins/crs_mini_dev.spacy
@@ -130,23 +104,15 @@ debug:
 	# python -m spacy debug data ./configs/t2v_ner.cfg --paths.train ./docbins/pun_train.spacy --paths.dev ./docbins/pun_dev.spacy
 	# python -m spacy debug data ./configs/t2v_sps.cfg --paths.train ./docbins/pus_train.spacy --paths.dev ./docbins/pus_dev.spacy
 	# python -m spacy debug data ./configs/t2v_spc.cfg --paths.train ./docbins/pus_train.spacy --paths.dev ./docbins/pus_dev.spacy
-	#
-	# python -m spacy debug data ./configs/config.cfg
-	# python -m spacy debug data ./configs/config_rel.cfg -c ./scripts/custom_functions.py
-	# python -m spacy debug data ./configs/config_rel_only.cfg -c ./scripts/custom_functions.py
-	# python -m spacy debug data ./configs/config_tr.cfg
-	# python -m spacy debug data ./configs/config_tr_rel.cfg -c ./scripts/custom_functions.py
-	#
-	# python -m spacy debug data ./configs/rel_toc2vec.cfg -c ./scripts/custom_functions.py
 
 gpu-test:
 	# source .venv/bin/activate
-	# python scripts/gpu_test.py
+	# python relation_extractor/gpu_test.py
 
 train:
 	# source .venv/bin/activate
 	#
-	# python -m spacy train ./configs/t2v_rel.cfg --output ./models/ppo_mini_t2v_rel -c ./scripts/custom_functions.py --paths.train ./docbins/ppo_mini_train.spacy --paths.dev ./docbins/ppo_mini_dev.spacy
+	# python -m spacy train ./configs/t2v_rel.cfg --output ./models/ppo_mini_t2v_rel -c ./relation_extractor/custom_functions.py --paths.train ./docbins/ppo_mini_train.spacy --paths.dev ./docbins/ppo_mini_dev.spacy
 	# python -m spacy train ./configs/t2v_ner.cfg --output ./models/cri_mini_t2v_ner --paths.train ./docbins/cri_mini_train.spacy --paths.dev ./docbins/cri_mini_dev.spacy
 	# python -m spacy train ./configs/t2v_ner.cfg --output ./models/cri_t2v_ner --paths.train ./docbins/cri_train.spacy --paths.dev ./docbins/cri_dev.spacy
 	# python -m spacy train ./configs/t2v_sps.cfg --output ./models/crs_mini_t2v_sps --paths.train ./docbins/crs_mini_train.spacy --paths.dev ./docbins/crs_mini_dev.spacy
@@ -159,19 +125,9 @@ train:
 	# python -m spacy train ./configs/t2v_ner.cfg --output ./models/pun_t2v_ner --paths.train ./docbins/pun_train.spacy --paths.dev ./docbins/pun_dev.spacy
 	# python -m spacy train ./configs/t2v_sps.cfg --output ./models/pus_t2v_sps --paths.train ./docbins/pus_train.spacy --paths.dev ./docbins/pus_dev.spacy
 	# python -m spacy train ./configs/t2v_spc.cfg --output ./models/pus_t2v_spc --paths.train ./docbins/pus_train.spacy --paths.dev ./docbins/pus_dev.spacy
-
 	#
-	####### python -m spacy train config.cfg --paths.train ./train.spacy --paths.dev ./dev.spacy
-	# python -m spacy train ./configs/config_old.cfg --output ./models/v1
-	# python -m spacy train ./configs/config_old_rel.cfg --output ./models/v2 -c ./scripts/custom_functions.py
-	# python -m spacy train ./configs/config.cfg --output ./models/v3
-	# python -m spacy train ./configs/config_rel.cfg --output ./models/v2 -c ./scripts/custom_functions.py
-	# python -m spacy train ./configs/config_rel_only.cfg --output ./models/v3 -c ./scripts/custom_functions.py
-	# python -m spacy train ./configs/config_tr.cfg --output ./models/v4
 	# python -m spacy train ./configs/config_tr.cfg --output ./models/v5 --gpu-id 0
-	# python -m spacy train ./configs/config_tr_rel.cfg --output ./models/v6 --gpu-id 0 -c ./scripts/custom_functions.py
-	#
-	# python -m spacy train ./configs/rel_toc2vec.cfg --output ./models/v3 -c ./scripts/custom_functions.py
+	# python -m spacy train ./configs/config_tr_rel.cfg --output ./models/v6 --gpu-id 0 -c ./relation_extractor/custom_functions.py
 	
 test:
 	# source .venv/bin/activate
@@ -186,14 +142,9 @@ test:
 	# python test.py ./models/dvv_t2v_ner/model-best ./docbins/dvv_test.spacy
 	# python test.py ./models/dvs_t2v_sps/model-best ./docbins/dvs_test.spacy
 	# python test.py ./models/dvs_t2v_spc/model-best ./docbins/dvs_test.spacy
-	#
-	# python test_old.py models/v1/model-best jsonl/obp.jsonl 100 101
-	# python test_old.py models/v2/model-best jsonl/obp.jsonl 101 102
-	# python test_old.py models/v3/model-best jsonl/obp.jsonl 203 204
-	# python test_old.py models/v4/model-best jsonl/obp.jsonl 100 101
-	#
-	# python test.py ./models/v3/model-best ./docbins/test_rel_only_complete.spacy --copyents
-	# python test.py ./models/v1/model-best ./docbins/test_rel_only_complete.spacy
+	# python test.py ./models/pun_t2v_ner/model-best ./docbins/pun_test.spacy
+	# python test.py ./models/pus_t2v_sps/model-best ./docbins/pus_test.spacy
+	# python test.py ./models/pus_t2v_spc/model-best ./docbins/pus_test.spacy
 	
 evaluate:
 	# source .venv/bin/activate
@@ -208,4 +159,7 @@ evaluate:
 	# python -m spacy evaluate ./models/dvv_t2v_ner/model-best ./docbins/dvv_test.spacy
 	# python -m spacy evaluate ./models/dvs_t2v_sps/model-best ./docbins/dvs_test.spacy
 	# python -m spacy evaluate ./models/dvs_t2v_spc/model-best ./docbins/dvs_test.spacy
+	# python -m spacy evaluate ./models/pun_t2v_ner/model-best ./docbins/pun_test.spacy
+	# python -m spacy evaluate ./models/pus_t2v_spc/model-best ./docbins/pus_test.spacy
+	# python -m spacy evaluate ./models/pus_t2v_sps/model-best ./docbins/pus_test.spacy
 	
