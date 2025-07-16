@@ -6,6 +6,7 @@ import xml.sax
 import re
 import json
 import random
+import math
 
 prodigy = []
 
@@ -239,7 +240,7 @@ if ( __name__ == "__main__"):
     print()
     print("Span Labels: ")
     for span_label in span_labels_by_value:
-        print(span_label + ' ' + str(span_labels_by_value[span_label]))
+        print(span_label.ljust(30) + ' ' + str(span_labels_by_value[span_label]))
 
     # Spit out a list of the rels we found
     rel_labels = {}
@@ -257,7 +258,33 @@ if ( __name__ == "__main__"):
     print()
     print("Rel Labels: ")
     for rel_label in rel_labels_by_value:
-        print(rel_label + ' ' + str(rel_labels_by_value[rel_label]))
+        print(rel_label.ljust(10) + ' ' + str(rel_labels_by_value[rel_label]))
+
+    # Spit out the length distribution of the texts
+    tlens = {}
+    tot = len(prodigy)
+
+    for pdatum in prodigy:
+        tlen = math.floor(len(pdatum['text']) / 100)
+        if tlen in tlens:
+            tlens[tlen] += 1
+        else:
+            tlens[tlen] = 1
+
+    tlens_by_key = dict(sorted(tlens.items()))
+
+    print()
+    print("Lengths: ")
+    print()
+    print('CHARS  COUNT           RUNNING_COUNT')
+    print('====================================')
+
+    runtot = 0
+
+    for tlen in tlens_by_key:
+        count = tlens_by_key[tlen]
+        runtot = runtot + count
+        print(str(tlen * 100).ljust(6) + ' ' + str(count).ljust(6) + ' ' + str(str(round((count / tot) * 100, 2)) + '%').rjust(6) + '   ' + str(runtot).ljust(6) + ' ' + str(str(round((runtot / tot) * 100, 2)) + '%').rjust(6))
 
     # Save our jsonl
     random.shuffle(prodigy)

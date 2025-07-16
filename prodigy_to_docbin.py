@@ -19,7 +19,7 @@ if ( __name__ == "__main__"):
     parser.add_argument('-re', '--rels', help='Comma separated list of rels to read from the jsonl file. Optionally a substitute name can be specified after a colon. eg. PERSPLACE:PERPLACE,PERSOCC:PEROCC . If you specify this option, a line will not be included in the DocBin unless it has at least one qualifying rel')
     parser.add_argument('-max', '--maxlen', type=int, default=1000000,help='Maximum length in characters of the text field in each json line which will be included in the output DocBin. i.e. all lines with a longer text field will be omitted.')
     parser.add_argument('-min', '--minlen', type=int, default=4, help='Minimum length in characters of the text field in each json line which will be included in the output DocBin. i.e. all lines with a shorter text field will be omitted.')
-    parser.add_argument('-rmt', '--relmaxtok', type=int, default=100, help='The maximum number of tokens which a rel should be allowed to span. Relationships which span more tokens than this will be ignored.')
+    parser.add_argument('-rmt', '--relmaxtok', type=int, help='The maximum number of tokens which a rel should be allowed to span. Relationships which span more tokens than this will be ignored.')
 
     args = parser.parse_args()
 
@@ -266,7 +266,7 @@ if ( __name__ == "__main__"):
                             # Only assign the relationship if the total range of tokens the model will have to consider is not too large
                             relfirsttok = min(doc.ents[rel['head']].start, doc.ents[rel['head']].end, doc.ents[rel['child']].start, doc.ents[rel['child']].end);
                             rellasttok = max(doc.ents[rel['head']].start, doc.ents[rel['head']].end, doc.ents[rel['child']].start, doc.ents[rel['child']].end);
-                            if rellasttok - relfirsttok <= args.relmaxtok:
+                            if args.relmaxtok is None or rellasttok - relfirsttok <= args.relmaxtok:
 
                                 spacy_rels[(start, end)][label] = 1.0
                                 assigned_rels += 1

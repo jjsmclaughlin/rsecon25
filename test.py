@@ -42,6 +42,7 @@ if ( __name__ == "__main__"):
 
     print('Will process docs ' + str(args.start) + ' to ' + str(end))
 
+    rels_to_evaluate = False
     examples = []
 
     for idx, gold in enumerate(docs):
@@ -119,6 +120,7 @@ if ( __name__ == "__main__"):
 
             # Print the rels in pred
             if pred._.rel:
+                rels_to_evaluate = True
                 print("PRED RELS:")
 
                 # Create a dictionary so we can look up each ent using its starting token
@@ -141,7 +143,7 @@ if ( __name__ == "__main__"):
                             print()
 
     # We cannot use the SpaCy evaluate command to evaluate relation_extractor so let's do it here. Code is borrowed from relation_extrator tutorial itself.
-    if pred._.rel:
+    if rels_to_evaluate:
 
         # Threshold is the cutoff to consider a prediction "positive". The docs for relation_extractor say this should be 0.5
         thresholds = [0.000, 0.050, 0.100, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.99, 0.999]

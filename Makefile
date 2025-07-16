@@ -39,6 +39,8 @@ prodigy_to_docbin:
 	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/ppo_train.spacy -s0 -e3270 --ents=VICTIM:PER,DEFENDANT:PER,DEFENDANTHOME:PLA,OCCUPATION:OCC --rels=PERSPLACE:PERPLA,PERSOCC:PEROCC --relmaxtok=64 --maxlen=1000
 	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/ppo_dev.spacy -s3271 -e4205 --ents=VICTIM:PER,DEFENDANT:PER,DEFENDANTHOME:PLA,OCCUPATION:OCC --rels=PERSPLACE:PERPLA,PERSOCC:PEROCC --relmaxtok=64 --maxlen=1000
 	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/ppo_test.spacy -s4206 --ents=VICTIM:PER,DEFENDANT:PER,DEFENDANTHOME:PLA,OCCUPATION:OCC --rels=PERSPLACE:PERPLA,PERSOCC:PEROCC --relmaxtok=64 --maxlen=1000
+	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/ppo_test_lg.spacy -s4206 --ents=VICTIM:PER,DEFENDANT:PER,DEFENDANTHOME:PLA,OCCUPATION:OCC --rels=PERSPLACE:PERPLA,PERSOCC:PEROCC
+	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/ppo_test_xl.spacy -s4206 --ents=VICTIM:PER,DEFENDANT:PER,DEFENDANTHOME:PLA,OCCUPATION:OCC --rels=PERSPLACE:PERPLA,PERSOCC:PEROCC --minlen=1000
 	#
 	# cri: Crime ner testing
 	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/cri_mini_train.spacy -s0 -e350 --ents=GRANDLARCENY,THEFT,THEFTFROMPLACE,HIGHWAYROBBERY,SHOPLIFTING --maxlen=300
@@ -62,6 +64,8 @@ prodigy_to_docbin:
 	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dvv_train.spacy -s0 -e3270 --ents=DEFENDANT,VICTIM,GUILTY,NOTGUILTY --maxlen=1000
 	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dvv_dev.spacy -s3271 -e4205 --ents=DEFENDANT,VICTIM,GUILTY,NOTGUILTY --maxlen=1000
 	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dvv_test.spacy -s4206 --ents=DEFENDANT,VICTIM,GUILTY,NOTGUILTY --maxlen=1000
+	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dvv_test_lg.spacy -s4206 --ents=DEFENDANT,VICTIM,GUILTY,NOTGUILTY
+	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dvv_test_xl.spacy -s4206 --ents=DEFENDANT,VICTIM,GUILTY,NOTGUILTY --minlen=1000
 	#
 	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dvs_train.spacy -s0 -e3270 --spans=DEFENDANT,VICTIM,GUILTY,NOTGUILTY --maxlen=1000
 	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dvs_dev.spacy -s3271 -e4205 --spans=DEFENDANT,VICTIM,GUILTY,NOTGUILTY --maxlen=1000
@@ -85,11 +89,15 @@ prodigy_to_docbin:
 	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dvr_train.spacy -s0 -e3270 --ents=DEFENDANT,GUILTY:VER,NOTGUILTY:VER --rels=DEFVER --relmaxtok=64 --maxlen=1000
 	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dvr_dev.spacy -s3271 -e4205 --ents=DEFENDANT,GUILTY:VER,NOTGUILTY:VER --rels=DEFVER --relmaxtok=64 --maxlen=1000
 	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dvr_test.spacy -s4206 --ents=DEFENDANT,GUILTY:VER,NOTGUILTY:VER --rels=DEFVER --relmaxtok=64 --maxlen=1000
+	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dvr_test_lg.spacy -s4206 --ents=DEFENDANT,GUILTY:VER,NOTGUILTY:VER --rels=DEFVER
+	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dvr_test_xl.spacy -s4206 --ents=DEFENDANT,GUILTY:VER,NOTGUILTY:VER --rels=DEFVER --minlen=1000
 	#
 	# dcr: Defendant crime relationship testing
 	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dcr_train.spacy -s0 -e3270 --ents=DEFENDANT,GRANDLARCENY:OFF,THEFT:OFF,THEFTFROMPLACE:OFF,HIGHWAYROBBERY:OFF,SHOPLIFTING:OFF,POCKETPICKING:OFF,BURGLARY:OFF,RECEIVING:OFF,ANIMALTHEFT:OFF,ROBBERY:OFF,HOUSEBREAKING:OFF,BIGAMY:OFF,PERJURY:OFF,FORGERY:OFF,RAPE:OFF,PETTYLARCENY:OFF,FRAUD:OFF,COININGOFFENCES:OFF,INFANTICIDE:OFF,EXTORTION:OFF,PERVERTINGJUSTICE:OFF,MURDER:OFF --rels=DEFOFF --relmaxtok=64 --maxlen=1000
 	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dcr_dev.spacy -s3271 -e4205 --ents=DEFENDANT,GRANDLARCENY:OFF,THEFT:OFF,THEFTFROMPLACE:OFF,HIGHWAYROBBERY:OFF,SHOPLIFTING:OFF,POCKETPICKING:OFF,BURGLARY:OFF,RECEIVING:OFF,ANIMALTHEFT:OFF,ROBBERY:OFF,HOUSEBREAKING:OFF,BIGAMY:OFF,PERJURY:OFF,FORGERY:OFF,RAPE:OFF,PETTYLARCENY:OFF,FRAUD:OFF,COININGOFFENCES:OFF,INFANTICIDE:OFF,EXTORTION:OFF,PERVERTINGJUSTICE:OFF,MURDER:OFF --rels=DEFOFF --relmaxtok=64 --maxlen=1000
 	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dcr_test.spacy -s4206 --ents=DEFENDANT,GRANDLARCENY:OFF,THEFT:OFF,THEFTFROMPLACE:OFF,HIGHWAYROBBERY:OFF,SHOPLIFTING:OFF,POCKETPICKING:OFF,BURGLARY:OFF,RECEIVING:OFF,ANIMALTHEFT:OFF,ROBBERY:OFF,HOUSEBREAKING:OFF,BIGAMY:OFF,PERJURY:OFF,FORGERY:OFF,RAPE:OFF,PETTYLARCENY:OFF,FRAUD:OFF,COININGOFFENCES:OFF,INFANTICIDE:OFF,EXTORTION:OFF,PERVERTINGJUSTICE:OFF,MURDER:OFF --rels=DEFOFF --relmaxtok=64 --maxlen=1000
+	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dcr_test_lg.spacy -s4206 --ents=DEFENDANT,GRANDLARCENY:OFF,THEFT:OFF,THEFTFROMPLACE:OFF,HIGHWAYROBBERY:OFF,SHOPLIFTING:OFF,POCKETPICKING:OFF,BURGLARY:OFF,RECEIVING:OFF,ANIMALTHEFT:OFF,ROBBERY:OFF,HOUSEBREAKING:OFF,BIGAMY:OFF,PERJURY:OFF,FORGERY:OFF,RAPE:OFF,PETTYLARCENY:OFF,FRAUD:OFF,COININGOFFENCES:OFF,INFANTICIDE:OFF,EXTORTION:OFF,PERVERTINGJUSTICE:OFF,MURDER:OFF --rels=DEFOFF
+	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dcr_test_xl.spacy -s4206 --ents=DEFENDANT,GRANDLARCENY:OFF,THEFT:OFF,THEFTFROMPLACE:OFF,HIGHWAYROBBERY:OFF,SHOPLIFTING:OFF,POCKETPICKING:OFF,BURGLARY:OFF,RECEIVING:OFF,ANIMALTHEFT:OFF,ROBBERY:OFF,HOUSEBREAKING:OFF,BIGAMY:OFF,PERJURY:OFF,FORGERY:OFF,RAPE:OFF,PETTYLARCENY:OFF,FRAUD:OFF,COININGOFFENCES:OFF,INFANTICIDE:OFF,EXTORTION:OFF,PERVERTINGJUSTICE:OFF,MURDER:OFF --rels=DEFOFF --minlen=1000
 
 config:
 	# source .venv/bin/activate
@@ -200,8 +208,14 @@ test:
 	#
 	# python test.py ./models/ppo_mini_t2v_rel/model-best ./docbins/ppo_mini_test.spacy --copyents
 	# python test.py ./models/ppo_t2v_rel/model-best ./docbins/ppo_test.spacy --copyents
+	# python test.py ./models/ppo_t2v_rel/model-best ./docbins/ppo_test_lg.spacy --copyents
+	# python test.py ./models/ppo_t2v_rel/model-best ./docbins/ppo_test_xl.spacy --copyents
 	# python test.py ./models/dvr_t2v_rel/model-best ./docbins/dvr_test.spacy --copyents
+	# python test.py ./models/dvr_t2v_rel/model-best ./docbins/dvr_test_lg.spacy --copyents
+	# python test.py ./models/dvr_t2v_rel/model-best ./docbins/dvr_test_xl.spacy --copyents
 	# python test.py ./models/dcr_t2v_rel/model-best ./docbins/dcr_test.spacy --copyents
+	# python test.py ./models/dcr_t2v_rel/model-best ./docbins/dcr_test_lg.spacy --copyents
+	# python test.py ./models/dcr_t2v_rel/model-best ./docbins/dcr_test_xl.spacy --copyents
 	# python test.py ./models/cri_mini_t2v_ner/model-best ./docbins/cri_mini_test.spacy
 	# python test.py ./models/cri_t2v_ner/model-best ./docbins/cri_test.spacy
 	# python test.py ./models/crs_mini_t2v_sps/model-best ./docbins/crs_mini_test.spacy
@@ -241,6 +255,8 @@ evaluate:
 	# python -m spacy evaluate ./models/crs_mini_t2v_spc/model-best ./docbins/crs_mini_test.spacy
 	# python -m spacy evaluate ./models/crs_t2v_spc/model-best ./docbins/crs_test.spacy
 	# python -m spacy evaluate ./models/dvv_t2v_ner/model-best ./docbins/dvv_test.spacy
+	# python -m spacy evaluate ./models/dvv_t2v_ner/model-best ./docbins/dvv_test_lg.spacy
+	# python -m spacy evaluate ./models/dvv_t2v_ner/model-best ./docbins/dvv_test_xl.spacy
 	# python -m spacy evaluate ./models/dvs_t2v_sps/model-best ./docbins/dvs_test.spacy
 	# python -m spacy evaluate ./models/dvs_t2v_spc/model-best ./docbins/dvs_test.spacy
 	# python -m spacy evaluate ./models/pun_t2v_ner/model-best ./docbins/pun_test.spacy
