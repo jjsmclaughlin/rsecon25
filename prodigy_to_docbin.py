@@ -90,7 +90,8 @@ if ( __name__ == "__main__"):
 
         docs_attempted = 0
         docs_added = 0
-        rejected_spans = [];
+        rejected_spans = []
+        reltoptok = 0
 
         for jsonline in tqdm(jsonlines[args.start:end], ascii=True, ncols=60):
 
@@ -176,7 +177,7 @@ if ( __name__ == "__main__"):
                                     #print(json.dumps(spanb))
                                     spanb['start'] = -1
                                     spanb['end'] = -1
-                                    #spanb['overlap'] = True;
+                                    #spanb['overlap'] = True
                                     #print(json.dumps(pdatum))
                         
                     # Remove spans with zero length (should include the overlapping spans we just found)
@@ -229,7 +230,7 @@ if ( __name__ == "__main__"):
                             try:
                                 rel['head'] = next(i for i,x in enumerate(filtered_spans) if 'uid' in x and x['uid'] == rel['headuid'])
                             except StopIteration:
-                                #print('FAILED REL HEAD:' + rel['headuid']);
+                                #print('FAILED REL HEAD:' + rel['headuid'])
                                 rel['head'] = None                  
                     
                             try:
@@ -264,9 +265,14 @@ if ( __name__ == "__main__"):
                             label = rels[rel["label"]]
 
                             # Only assign the relationship if the total range of tokens the model will have to consider is not too large
-                            relfirsttok = min(doc.ents[rel['head']].start, doc.ents[rel['head']].end, doc.ents[rel['child']].start, doc.ents[rel['child']].end);
-                            rellasttok = max(doc.ents[rel['head']].start, doc.ents[rel['head']].end, doc.ents[rel['child']].start, doc.ents[rel['child']].end);
-                            if args.relmaxtok is None or rellasttok - relfirsttok <= args.relmaxtok:
+                            relfirsttok = min(doc.ents[rel['head']].start, doc.ents[rel['head']].end, doc.ents[rel['child']].start, doc.ents[rel['child']].end)
+                            rellasttok = max(doc.ents[rel['head']].start, doc.ents[rel['head']].end, doc.ents[rel['child']].start, doc.ents[rel['child']].end)
+
+                            toklen = rellasttok - relfirsttok
+
+                            if args.relmaxtok is None or toklen <= args.relmaxtok:
+
+                                if toklen > reltoptok: reltoptok = toklen
 
                                 spacy_rels[(start, end)][label] = 1.0
                                 assigned_rels += 1
@@ -340,6 +346,8 @@ if ( __name__ == "__main__"):
                 docs_added += 1
 
         print('Added ' + str(docs_added) + ' docs from ' + str(docs_attempted) + ' attempted (' + str((docs_added / docs_attempted) * 100) + '%).')
+
+        if reltoptok > 0: print('Longest relattionship (in tokens) was: ' + str(reltoptok))
 
         print(str(len(rejected_spans)) + ' rejected spans:')
         for rejected_span in rejected_spans:
