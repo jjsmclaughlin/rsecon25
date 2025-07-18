@@ -267,6 +267,10 @@ test:
 	# source .venv/bin/activate
 	#
 	# python test.py ./models/dvv_t2v_ner/model-best ./docbins/dvv_test.spacy
+	# python test.py ./models/dvv_tra_ner/model-best ./docbins/dvv_test.spacy
+	# python test.py ./models/dvv_tiny_tra_ner/model-best ./docbins/dvv_tiny_test.spacy
+	# python test.py ./models/dvs_tra_sps/model-best ./docbins/dvs_test.spacy
+	# python test.py ./models/dvs_tra_spc/model-best ./docbins/dvs_test.spacy
 	# python test.py ./models/dvs_t2v_sps/model-best ./docbins/dvs_test.spacy
 	# python test.py ./models/dvs_t2v_spc/model-best ./docbins/dvs_test.spacy
 	#
@@ -291,11 +295,6 @@ test:
 	# python test.py ./models/pun_t2v_ner/model-best ./docbins/pun_test.spacy
 	# python test.py ./models/pus_t2v_sps/model-best ./docbins/pus_test.spacy
 	# python test.py ./models/pus_t2v_spc/model-best ./docbins/pus_test.spacy
-	#
-	# python test.py ./models/dvv_tra_ner/model-best ./docbins/dvv_test.spacy
-	# python test.py ./models/dvv_tiny_tra_ner/model-best ./docbins/dvv_tiny_test.spacy
-	# python test.py ./models/dvs_tra_sps/model-best ./docbins/dvs_test.spacy
-	# python test.py ./models/dvs_tra_spc/model-best ./docbins/dvs_test.spacy
 	#
 	# python test.py ./models/cri_tra_ner/model-best ./docbins/cri_test.spacy
 	# python test.py ./models/cri_md_tra_ner/model-best ./docbins/cri_test.spacy
