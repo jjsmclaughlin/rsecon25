@@ -20,6 +20,7 @@ if ( __name__ == "__main__"):
     parser.add_argument('-max', '--maxlen', type=int, default=1000000,help='Maximum length in characters of the text field in each json line which will be included in the output DocBin. i.e. all lines with a longer text field will be omitted.')
     parser.add_argument('-min', '--minlen', type=int, default=4, help='Minimum length in characters of the text field in each json line which will be included in the output DocBin. i.e. all lines with a shorter text field will be omitted.')
     parser.add_argument('-rmt', '--relmaxtok', type=int, help='The maximum number of tokens which a rel should be allowed to span. Relationships which span more tokens than this will be ignored.')
+    parser.add_argument('-me', '--minents', help='Comma separated list of ents and the number of them required for the Doc to be included in the DocBin. Number required specified after a colon. eg. OFF:2,DEFENDANT:2')
 
     args = parser.parse_args()
 
@@ -61,6 +62,17 @@ if ( __name__ == "__main__"):
                 rels[reldef] = reldef
 
         print('rels: ' + str(rels))
+
+    minents = {}
+
+    if args.minents:
+        minentdefs = args.minents.split(',')
+        for minentdef in minentdefs:
+            minentkv = minentdef.split(':')
+            minents[minentkv[0]] = int(minentkv[1])
+
+        print('minents: ' + str(minents))
+
 
     print('infile: ' + str(args.infile))
 
@@ -289,7 +301,28 @@ if ( __name__ == "__main__"):
 
                         doc._.rel = spacy_rels
 
-                if args.outfile is None:
+
+                if len(minents) > 0 and suitable == True:
+
+                    suitable = False
+
+                    for minent in minents:
+
+                        entname = minent
+                        required = minents[minent]
+
+                        total = 0
+
+                        for ent in doc.ents:
+
+                            if ent.label_ == entname: total += 1
+
+                        if total >= required:
+
+                            suitable = True
+
+
+                if args.outfile is None and suitable:
 
                     # If we have no outfile then we display useful informtaion about the finished doc
                     print()
@@ -330,22 +363,22 @@ if ( __name__ == "__main__"):
                                     print('+ ' + str(childent.label_).ljust(20) + ' ' + str(childent.start).ljust(3) + '-> ' + str(childent.end).ljust(3) + ' ' + str(childent))
                                     print()
 
-                    if suitable:
-
-                        print('Doc was added.')
-                        print()
-
-                    else:
-
-                        print('Doc was not suitable.')
-                        print()
+                    #if suitable:
+                    #
+                    #    print('Doc was added.')
+                    #    print()
+                    #
+                    #else:
+                    #
+                    #    print('Doc was not suitable.')
+                    #    print()
 
             if suitable:
 
                 db.add(doc)
                 docs_added += 1
 
-        print('Added ' + str(docs_added) + ' docs from ' + str(docs_attempted) + ' attempted (' + str((docs_added / docs_attempted) * 100) + '%).')
+        print('Added ' + str(docs_added) + ' docs from ' + str(docs_attempted) + ' attempted (' + str(round((docs_added / docs_attempted) * 100, 2)) + '%).')
 
         if reltoptok > 0: print('Longest relattionship (in tokens) was: ' + str(reltoptok))
 

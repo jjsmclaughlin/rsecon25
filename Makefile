@@ -77,20 +77,26 @@ prodigy_to_docbin:
 	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dcr_train.spacy -s0 -e3270 --ents=DEFENDANT,GRANDLARCENY:OFF,THEFT:OFF,THEFTFROMPLACE:OFF,HIGHWAYROBBERY:OFF,SHOPLIFTING:OFF,POCKETPICKING:OFF,BURGLARY:OFF,RECEIVING:OFF,ANIMALTHEFT:OFF,ROBBERY:OFF,HOUSEBREAKING:OFF,BIGAMY:OFF,PERJURY:OFF,FORGERY:OFF,RAPE:OFF,PETTYLARCENY:OFF,FRAUD:OFF,COININGOFFENCES:OFF,INFANTICIDE:OFF,EXTORTION:OFF,PERVERTINGJUSTICE:OFF,MURDER:OFF --rels=DEFOFF --relmaxtok=64 --maxlen=1000
 	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dcr_train_md.spacy -s0 -e3270 --ents=DEFENDANT,GRANDLARCENY:OFF,THEFT:OFF,THEFTFROMPLACE:OFF,HIGHWAYROBBERY:OFF,SHOPLIFTING:OFF,POCKETPICKING:OFF,BURGLARY:OFF,RECEIVING:OFF,ANIMALTHEFT:OFF,ROBBERY:OFF,HOUSEBREAKING:OFF,BIGAMY:OFF,PERJURY:OFF,FORGERY:OFF,RAPE:OFF,PETTYLARCENY:OFF,FRAUD:OFF,COININGOFFENCES:OFF,INFANTICIDE:OFF,EXTORTION:OFF,PERVERTINGJUSTICE:OFF,MURDER:OFF --rels=DEFOFF --relmaxtok=100 --maxlen=2000
 	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dcr_train_lg.spacy -s0 -e3270 --ents=DEFENDANT,GRANDLARCENY:OFF,THEFT:OFF,THEFTFROMPLACE:OFF,HIGHWAYROBBERY:OFF,SHOPLIFTING:OFF,POCKETPICKING:OFF,BURGLARY:OFF,RECEIVING:OFF,ANIMALTHEFT:OFF,ROBBERY:OFF,HOUSEBREAKING:OFF,BIGAMY:OFF,PERJURY:OFF,FORGERY:OFF,RAPE:OFF,PETTYLARCENY:OFF,FRAUD:OFF,COININGOFFENCES:OFF,INFANTICIDE:OFF,EXTORTION:OFF,PERVERTINGJUSTICE:OFF,MURDER:OFF --rels=DEFOFF --relmaxtok=100
+	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dcr_train_mu.spacy -s0 -e3270 --ents=DEFENDANT,GRANDLARCENY:OFF,THEFT:OFF,THEFTFROMPLACE:OFF,HIGHWAYROBBERY:OFF,SHOPLIFTING:OFF,POCKETPICKING:OFF,BURGLARY:OFF,RECEIVING:OFF,ANIMALTHEFT:OFF,ROBBERY:OFF,HOUSEBREAKING:OFF,BIGAMY:OFF,PERJURY:OFF,FORGERY:OFF,RAPE:OFF,PETTYLARCENY:OFF,FRAUD:OFF,COININGOFFENCES:OFF,INFANTICIDE:OFF,EXTORTION:OFF,PERVERTINGJUSTICE:OFF,MURDER:OFF --rels=DEFOFF --relmaxtok=100 --maxlen=2000 --minents=OFF:2
 	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dcr_dev.spacy -s3271 -e4205 --ents=DEFENDANT,GRANDLARCENY:OFF,THEFT:OFF,THEFTFROMPLACE:OFF,HIGHWAYROBBERY:OFF,SHOPLIFTING:OFF,POCKETPICKING:OFF,BURGLARY:OFF,RECEIVING:OFF,ANIMALTHEFT:OFF,ROBBERY:OFF,HOUSEBREAKING:OFF,BIGAMY:OFF,PERJURY:OFF,FORGERY:OFF,RAPE:OFF,PETTYLARCENY:OFF,FRAUD:OFF,COININGOFFENCES:OFF,INFANTICIDE:OFF,EXTORTION:OFF,PERVERTINGJUSTICE:OFF,MURDER:OFF --rels=DEFOFF --relmaxtok=64 --maxlen=1000
 	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dcr_dev_md.spacy -s3271 -e4205 --ents=DEFENDANT,GRANDLARCENY:OFF,THEFT:OFF,THEFTFROMPLACE:OFF,HIGHWAYROBBERY:OFF,SHOPLIFTING:OFF,POCKETPICKING:OFF,BURGLARY:OFF,RECEIVING:OFF,ANIMALTHEFT:OFF,ROBBERY:OFF,HOUSEBREAKING:OFF,BIGAMY:OFF,PERJURY:OFF,FORGERY:OFF,RAPE:OFF,PETTYLARCENY:OFF,FRAUD:OFF,COININGOFFENCES:OFF,INFANTICIDE:OFF,EXTORTION:OFF,PERVERTINGJUSTICE:OFF,MURDER:OFF --rels=DEFOFF --relmaxtok=100 --maxlen=2000
 	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dcr_dev_lg.spacy -s3271 -e4205 --ents=DEFENDANT,GRANDLARCENY:OFF,THEFT:OFF,THEFTFROMPLACE:OFF,HIGHWAYROBBERY:OFF,SHOPLIFTING:OFF,POCKETPICKING:OFF,BURGLARY:OFF,RECEIVING:OFF,ANIMALTHEFT:OFF,ROBBERY:OFF,HOUSEBREAKING:OFF,BIGAMY:OFF,PERJURY:OFF,FORGERY:OFF,RAPE:OFF,PETTYLARCENY:OFF,FRAUD:OFF,COININGOFFENCES:OFF,INFANTICIDE:OFF,EXTORTION:OFF,PERVERTINGJUSTICE:OFF,MURDER:OFF --rels=DEFOFF --relmaxtok=100
+	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dcr_dev_mu.spacy -s3271 -e4205 --ents=DEFENDANT,GRANDLARCENY:OFF,THEFT:OFF,THEFTFROMPLACE:OFF,HIGHWAYROBBERY:OFF,SHOPLIFTING:OFF,POCKETPICKING:OFF,BURGLARY:OFF,RECEIVING:OFF,ANIMALTHEFT:OFF,ROBBERY:OFF,HOUSEBREAKING:OFF,BIGAMY:OFF,PERJURY:OFF,FORGERY:OFF,RAPE:OFF,PETTYLARCENY:OFF,FRAUD:OFF,COININGOFFENCES:OFF,INFANTICIDE:OFF,EXTORTION:OFF,PERVERTINGJUSTICE:OFF,MURDER:OFF --rels=DEFOFF --relmaxtok=100 --maxlen=2000 --minents=OFF:2
 	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dcr_test.spacy -s4206 --ents=DEFENDANT,GRANDLARCENY:OFF,THEFT:OFF,THEFTFROMPLACE:OFF,HIGHWAYROBBERY:OFF,SHOPLIFTING:OFF,POCKETPICKING:OFF,BURGLARY:OFF,RECEIVING:OFF,ANIMALTHEFT:OFF,ROBBERY:OFF,HOUSEBREAKING:OFF,BIGAMY:OFF,PERJURY:OFF,FORGERY:OFF,RAPE:OFF,PETTYLARCENY:OFF,FRAUD:OFF,COININGOFFENCES:OFF,INFANTICIDE:OFF,EXTORTION:OFF,PERVERTINGJUSTICE:OFF,MURDER:OFF --rels=DEFOFF --relmaxtok=64 --maxlen=1000
 	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dcr_test_lg.spacy -s4206 --ents=DEFENDANT,GRANDLARCENY:OFF,THEFT:OFF,THEFTFROMPLACE:OFF,HIGHWAYROBBERY:OFF,SHOPLIFTING:OFF,POCKETPICKING:OFF,BURGLARY:OFF,RECEIVING:OFF,ANIMALTHEFT:OFF,ROBBERY:OFF,HOUSEBREAKING:OFF,BIGAMY:OFF,PERJURY:OFF,FORGERY:OFF,RAPE:OFF,PETTYLARCENY:OFF,FRAUD:OFF,COININGOFFENCES:OFF,INFANTICIDE:OFF,EXTORTION:OFF,PERVERTINGJUSTICE:OFF,MURDER:OFF --rels=DEFOFF
+	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dcr_test_mu.spacy -s4206 --ents=DEFENDANT,GRANDLARCENY:OFF,THEFT:OFF,THEFTFROMPLACE:OFF,HIGHWAYROBBERY:OFF,SHOPLIFTING:OFF,POCKETPICKING:OFF,BURGLARY:OFF,RECEIVING:OFF,ANIMALTHEFT:OFF,ROBBERY:OFF,HOUSEBREAKING:OFF,BIGAMY:OFF,PERJURY:OFF,FORGERY:OFF,RAPE:OFF,PETTYLARCENY:OFF,FRAUD:OFF,COININGOFFENCES:OFF,INFANTICIDE:OFF,EXTORTION:OFF,PERVERTINGJUSTICE:OFF,MURDER:OFF --rels=DEFOFF --maxlen=2000 --minents=OFF:2
 	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dcr_test_xl.spacy -s4206 --ents=DEFENDANT,GRANDLARCENY:OFF,THEFT:OFF,THEFTFROMPLACE:OFF,HIGHWAYROBBERY:OFF,SHOPLIFTING:OFF,POCKETPICKING:OFF,BURGLARY:OFF,RECEIVING:OFF,ANIMALTHEFT:OFF,ROBBERY:OFF,HOUSEBREAKING:OFF,BIGAMY:OFF,PERJURY:OFF,FORGERY:OFF,RAPE:OFF,PETTYLARCENY:OFF,FRAUD:OFF,COININGOFFENCES:OFF,INFANTICIDE:OFF,EXTORTION:OFF,PERVERTINGJUSTICE:OFF,MURDER:OFF --rels=DEFOFF --minlen=1000
 	#
 	# dvr: Defendant verdict relationship testing
 	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dvr_train.spacy -s0 -e3270 --ents=DEFENDANT,GUILTY:VER,NOTGUILTY:VER --rels=DEFVER --relmaxtok=64 --maxlen=1000
 	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dvr_train_lg.spacy -s0 -e3270 --ents=DEFENDANT,GUILTY:VER,NOTGUILTY:VER --rels=DEFVER --relmaxtok=100
+	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dvr_train_mu.spacy -s0 -e3270 --ents=DEFENDANT,GUILTY:VER,NOTGUILTY:VER --rels=DEFVER --relmaxtok=100 --minents=VER:2
 	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dvr_dev.spacy -s3271 -e4205 --ents=DEFENDANT,GUILTY:VER,NOTGUILTY:VER --rels=DEFVER --relmaxtok=64 --maxlen=1000
 	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dvr_dev_lg.spacy -s3271 -e4205 --ents=DEFENDANT,GUILTY:VER,NOTGUILTY:VER --rels=DEFVER --relmaxtok=100
+	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dvr_dev_mu.spacy -s3271 -e4205 --ents=DEFENDANT,GUILTY:VER,NOTGUILTY:VER --rels=DEFVER --relmaxtok=100 --minents=VER:2
 	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dvr_test.spacy -s4206 --ents=DEFENDANT,GUILTY:VER,NOTGUILTY:VER --rels=DEFVER --relmaxtok=64 --maxlen=1000
 	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dvr_test_lg.spacy -s4206 --ents=DEFENDANT,GUILTY:VER,NOTGUILTY:VER --rels=DEFVER
+	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dvr_test_mu.spacy -s4206 --ents=DEFENDANT,GUILTY:VER,NOTGUILTY:VER --rels=DEFVER --minents=VER:2
 	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dvr_test_xl.spacy -s4206 --ents=DEFENDANT,GUILTY:VER,NOTGUILTY:VER --rels=DEFVER --minlen=1000
 	#
 	# ppo: Person Place Occupation relationship testing.
@@ -140,11 +146,14 @@ fillconfig:
 	# python -m spacy init fill-config ./baseconfigs/t2v_sps.cfg ./configs/t2v_sps.cfg
 	# python -m spacy init fill-config ./baseconfigs/t2v_spc.cfg ./configs/t2v_spc.cfg
 	# python -m spacy init fill-config ./baseconfigs/t2v_rel.cfg ./configs/t2v_rel.cfg -c ./relation_extractor/custom_functions.py
+	# python -m spacy init fill-config ./baseconfigs/t2v_rel_p.cfg ./configs/t2v_rel_p.cfg -c ./relation_extractor/custom_functions.py
 	#
 	# python -m spacy init fill-config ./baseconfigs/tra_ner.cfg ./configs/tra_ner.cfg
 	# python -m spacy init fill-config ./baseconfigs/tra_sps.cfg ./configs/tra_sps.cfg
 	# python -m spacy init fill-config ./baseconfigs/tra_spc.cfg ./configs/tra_spc.cfg
 	# python -m spacy init fill-config ./baseconfigs/tra_rel.cfg ./configs/tra_rel.cfg -c ./relation_extractor/custom_functions.py
+	# python -m spacy init fill-config ./baseconfigs/tra_rel_p.cfg ./configs/tra_rel_p.cfg -c ./relation_extractor/custom_functions.py
+
 
 debug:
 	# source .venv/bin/activate
@@ -163,6 +172,7 @@ debug:
 	#
 	# python -m spacy debug data ./configs/t2v_rel.cfg -c ./relation_extractor/custom_functions.py --paths.train ./docbins/dcr_train.spacy --paths.dev ./docbins/dcr_dev.spacy
 	# python -m spacy debug data ./configs/t2v_rel.cfg -c ./relation_extractor/custom_functions.py --paths.train ./docbins/dcr_train_lg.spacy --paths.dev ./docbins/dcr_dev_lg.spacy
+	# python -m spacy debug data ./configs/t2v_rel.cfg -c ./relation_extractor/custom_functions.py --paths.train ./docbins/dcr_train_mu.spacy --paths.dev ./docbins/dcr_dev_mu.spacy
 	#
 	# python -m spacy debug data ./configs/t2v_rel.cfg -c ./relation_extractor/custom_functions.py --paths.train ./docbins/dvr_train.spacy --paths.dev ./docbins/dvr_dev.spacy
 	# python -m spacy debug data ./configs/t2v_rel.cfg -c ./relation_extractor/custom_functions.py --paths.train ./docbins/dvr_train_lg.spacy --paths.dev ./docbins/dvr_dev_lg.spacy
@@ -190,8 +200,11 @@ debug:
 	#
 	# python -m spacy debug data ./configs/tra_rel.cfg -c ./relation_extractor/custom_functions.py --paths.train ./docbins/dcr_train.spacy --paths.dev ./docbins/dcr_dev.spacy
 	# python -m spacy debug data ./configs/tra_rel.cfg -c ./relation_extractor/custom_functions.py --paths.train ./docbins/dcr_train_lg.spacy --paths.dev ./docbins/dcr_dev_lg.spacy
+	# python -m spacy debug data ./configs/tra_rel.cfg -c ./relation_extractor/custom_functions.py --paths.train ./docbins/dcr_train_mu.spacy --paths.dev ./docbins/dcr_dev_mu.spacy
+	#
 	# python -m spacy debug data ./configs/tra_rel.cfg -c ./relation_extractor/custom_functions.py --paths.train ./docbins/dvr_train.spacy --paths.dev ./docbins/dvr_dev.spacy
 	# python -m spacy debug data ./configs/tra_rel.cfg -c ./relation_extractor/custom_functions.py --paths.train ./docbins/dvr_train_lg.spacy --paths.dev ./docbins/dvr_dev_lg.spacy
+	#
 	# python -m spacy debug data ./configs/tra_rel.cfg -c ./relation_extractor/custom_functions.py --paths.train ./docbins/ppo_mini_train.spacy --paths.dev ./docbins/ppo_mini_dev.spacy
 	# python -m spacy debug data ./configs/tra_rel.cfg -c ./relation_extractor/custom_functions.py --paths.train ./docbins/ppo_train.spacy --paths.dev ./docbins/ppo_dev.spacy
 	# python -m spacy debug data ./configs/tra_rel.cfg -c ./relation_extractor/custom_functions.py --paths.train ./docbins/ppo_train_md.spacy --paths.dev ./docbins/ppo_dev_md.spacy
@@ -223,8 +236,14 @@ train:
 	#
 	# python -m spacy train ./configs/t2v_rel.cfg --output ./models/dcr_t2v_rel -c ./relation_extractor/custom_functions.py --paths.train ./docbins/dcr_train.spacy --paths.dev ./docbins/dcr_dev.spacy
 	# python -m spacy train ./configs/t2v_rel.cfg --output ./models/dcr_lg_t2v_rel -c ./relation_extractor/custom_functions.py --paths.train ./docbins/dcr_train_lg.spacy --paths.dev ./docbins/dcr_dev_lg.spacy
+	# python -m spacy train ./configs/t2v_rel.cfg --output ./models/dcr_mu_t2v_rel -c ./relation_extractor/custom_functions.py --paths.train ./docbins/dcr_train_mu.spacy --paths.dev ./docbins/dcr_dev_mu.spacy
+	# python -m spacy train ./configs/t2v_rel_p.cfg --output ./models/dcr_mu_t2v_rel_p -c ./relation_extractor/custom_functions.py --paths.train ./docbins/dcr_train_mu.spacy --paths.dev ./docbins/dcr_dev_mu.spacy
+	#
 	# python -m spacy train ./configs/t2v_rel.cfg --output ./models/dvr_t2v_rel -c ./relation_extractor/custom_functions.py --paths.train ./docbins/dvr_train.spacy --paths.dev ./docbins/dvr_dev.spacy
 	# python -m spacy train ./configs/t2v_rel.cfg --output ./models/dvr_lg_t2v_rel -c ./relation_extractor/custom_functions.py --paths.train ./docbins/dvr_train_lg.spacy --paths.dev ./docbins/dvr_dev_lg.spacy
+	# python -m spacy train ./configs/t2v_rel.cfg --output ./models/dvr_mu_t2v_rel -c ./relation_extractor/custom_functions.py --paths.train ./docbins/dvr_train_mu.spacy --paths.dev ./docbins/dvr_dev_mu.spacy
+	# python -m spacy train ./configs/t2v_rel_p.cfg --output ./models/dvr_mu_t2v_rel_p -c ./relation_extractor/custom_functions.py --paths.train ./docbins/dvr_train_mu.spacy --paths.dev ./docbins/dvr_dev_mu.spacy
+	#
 	# python -m spacy train ./configs/t2v_rel.cfg --output ./models/ppo_mini_t2v_rel -c ./relation_extractor/custom_functions.py --paths.train ./docbins/ppo_mini_train.spacy --paths.dev ./docbins/ppo_mini_dev.spacy
 	# python -m spacy train ./configs/t2v_rel.cfg --output ./models/ppo_t2v_rel -c ./relation_extractor/custom_functions.py --paths.train ./docbins/ppo_train.spacy --paths.dev ./docbins/ppo_dev.spacy
 	# python -m spacy train ./configs/t2v_rel.cfg --output ./models/ppo_lg_t2v_rel -c ./relation_extractor/custom_functions.py --paths.train ./docbins/ppo_train_lg.spacy --paths.dev ./docbins/ppo_dev_lg.spacy
@@ -249,8 +268,14 @@ train:
 	# python -m spacy train ./configs/tra_rel.cfg --output ./models/dcr_tra_rel -c ./relation_extractor/custom_functions.py --paths.train ./docbins/dcr_train.spacy --paths.dev ./docbins/dcr_dev.spacy --gpu-id 0
 	# python -m spacy train ./configs/tra_rel.cfg --output ./models/dcr_md_tra_rel -c ./relation_extractor/custom_functions.py --paths.train ./docbins/dcr_train_md.spacy --paths.dev ./docbins/dcr_dev_md.spacy --gpu-id 0
 	# NOT ENOUGH MEMORY python -m spacy train ./configs/tra_rel.cfg --output ./models/dcr_lg_tra_rel -c ./relation_extractor/custom_functions.py --paths.train ./docbins/dcr_train_lg.spacy --paths.dev ./docbins/dcr_dev_lg.spacy --gpu-id 0
+	# python -m spacy train ./configs/tra_rel.cfg --output ./models/dcr_mu_tra_rel -c ./relation_extractor/custom_functions.py --paths.train ./docbins/dcr_train_mu.spacy --paths.dev ./docbins/dcr_dev_mu.spacy --gpu-id 0
+	# python -m spacy train ./configs/tra_rel_p.cfg --output ./models/dcr_mu_tra_rel_p -c ./relation_extractor/custom_functions.py --paths.train ./docbins/dcr_train_mu.spacy --paths.dev ./docbins/dcr_dev_mu.spacy --gpu-id 0
+	#
 	# python -m spacy train ./configs/tra_rel.cfg --output ./models/dvr_tra_rel -c ./relation_extractor/custom_functions.py --paths.train ./docbins/dvr_train.spacy --paths.dev ./docbins/dvr_dev.spacy --gpu-id 0
 	# python -m spacy train ./configs/tra_rel.cfg --output ./models/dvr_lg_tra_rel -c ./relation_extractor/custom_functions.py --paths.train ./docbins/dvr_train_lg.spacy --paths.dev ./docbins/dvr_dev_lg.spacy --gpu-id 0
+	# python -m spacy train ./configs/tra_rel.cfg --output ./models/dvr_mu_tra_rel -c ./relation_extractor/custom_functions.py --paths.train ./docbins/dvr_train_mu.spacy --paths.dev ./docbins/dvr_dev_mu.spacy --gpu-id 0
+	# python -m spacy train ./configs/tra_rel_p.cfg --output ./models/dvr_mu_tra_rel_p -c ./relation_extractor/custom_functions.py --paths.train ./docbins/dvr_train_mu.spacy --paths.dev ./docbins/dvr_dev_mu.spacy --gpu-id 0
+	#
 	# python -m spacy train ./configs/tra_rel.cfg --output ./models/ppo_mini_tra_rel -c ./relation_extractor/custom_functions.py --paths.train ./docbins/ppo_mini_train.spacy --paths.dev ./docbins/ppo_mini_dev.spacy --gpu-id 0
 	# python -m spacy train ./configs/tra_rel.cfg --output ./models/ppo_tra_rel -c ./relation_extractor/custom_functions.py --paths.train ./docbins/ppo_train.spacy --paths.dev ./docbins/ppo_dev.spacy --gpu-id 0
 	# python -m spacy train ./configs/tra_rel.cfg --output ./models/ppo_md_tra_rel -c ./relation_extractor/custom_functions.py --paths.train ./docbins/ppo_train_md.spacy --paths.dev ./docbins/ppo_dev_md.spacy --gpu-id 0
@@ -283,10 +308,17 @@ test:
 	#
 	# python test.py ./models/dcr_t2v_rel/model-best ./docbins/dcr_test.spacy --copyents
 	# python test.py ./models/dcr_t2v_rel/model-best ./docbins/dcr_test_lg.spacy --copyents
+	# python test.py ./models/dcr_t2v_rel/model-best ./docbins/dcr_test_lg.spacy --copyents
+	# python test.py ./models/dcr_mu_t2v_rel/model-best ./docbins/dcr_test_mu.spacy --copyents
+	# python test.py ./models/dcr_mu_t2v_rel_p/model-best ./docbins/dcr_test_mu.spacy --copyents
 	# python test.py ./models/dcr_t2v_rel/model-best ./docbins/dcr_test_xl.spacy --copyents
+	#
 	# python test.py ./models/dvr_t2v_rel/model-best ./docbins/dvr_test.spacy --copyents
 	# python test.py ./models/dvr_t2v_rel/model-best ./docbins/dvr_test_lg.spacy --copyents
+	# python test.py ./models/dvr_mu_t2v_rel/model-best ./docbins/dvr_test_mu.spacy --copyents
+	# python test.py ./models/dvr_mu_t2v_rel_p/model-best ./docbins/dvr_test_mu.spacy --copyents
 	# python test.py ./models/dvr_t2v_rel/model-best ./docbins/dvr_test_xl.spacy --copyents
+	#
 	# python test.py ./models/ppo_mini_t2v_rel/model-best ./docbins/ppo_mini_test.spacy --copyents
 	# python test.py ./models/ppo_t2v_rel/model-best ./docbins/ppo_test.spacy --copyents
 	# python test.py ./models/ppo_t2v_rel/model-best ./docbins/ppo_test_lg.spacy --copyents
@@ -302,7 +334,13 @@ test:
 	# python test.py ./models/cri_tra_spc/model-best ./docbins/cri_test.spacy
 	#
 	# python test.py ./models/dcr_tra_rel/model-best ./docbins/dcr_test.spacy --copyents
+	# python test.py ./models/dcr_mu_tra_rel/model-best ./docbins/dcr_test_mu.spacy --copyents
+	# python test.py ./models/dcr_mu_tra_rel_p/model-best ./docbins/dcr_test_mu.spacy --copyents
+	#
 	# python test.py ./models/dvr_tra_rel/model-best ./docbins/dvr_test.spacy --copyents
+	# python test.py ./models/dvr_mu_tra_rel/model-best ./docbins/dvr_test_mu.spacy --copyents
+	# python test.py ./models/dvr_mu_tra_rel_p/model-best ./docbins/dvr_test_mu.spacy --copyents
+
 	# python test.py ./models/ppo_mini_tra_rel/model-best ./docbins/ppo_mini_test.spacy --copyents
 	# python test.py ./models/ppo_tra_rel/model-best ./docbins/ppo_test.spacy --copyents
 	#
