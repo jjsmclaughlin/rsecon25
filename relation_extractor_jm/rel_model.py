@@ -33,7 +33,54 @@ def create_instances(max_length: int) -> Callable[[Doc], List[Tuple[Span, Span]]
             for ent2 in doc.ents:
                 if ent1 != ent2:
                     if max_length and abs(ent2.start - ent1.start) <= max_length:
-                        instances.append((ent1, ent2))
+                        #print(ent1.label_)
+                        #if (ent1.label_ == 'DEFENDANT' and ent2.label_ == 'OFF') or (ent2.label_ == 'DEFENDANT' and ent1.label_ == 'OFF'):
+                        if ent1.label_ == 'DEFENDANT' and ent2.label_ == 'OFF':
+        
+                            longenough = False
+
+                            if ent1.start < ent2.start:
+                                #lowent = ent1
+                                #highent = ent2
+                                #print('ent1 was low')
+
+                                #token_indices.extend([i for i in range(ent1.start, ent2.start)])
+                                #lengths.append(ent2.start - ent1.start)
+
+                                #token_indices.extend([i for i in range(ent1.end, ent2.end)])
+                                #lengths.append(ent2.end - ent1.end)
+
+                                #token_indices.extend([i for i in range(ent1.end, ent2.start)])
+                                #lengths.append(ent2.start - ent1.end)
+                                #token_indices.extend([i for i in range(ent1.end, ent2.start)])
+                                #print(ent2.start - ent1.end)
+                                if (ent2.start - ent1.end) > 5: longenough = True
+
+
+                            else:
+                                #lowent = ent2
+                                #highent = ent1
+                                #print('ent2 was low')
+
+                                #token_indices.extend([i for i in range(ent2.end, ent1.end)])
+                                #lengths.append(ent1.end - ent2.end)
+
+                                #token_indices.extend([i for i in range(ent2.start, ent1.start)])
+                                #lengths.append(ent1.start - ent2.start)
+
+                                #token_indices.extend([i for i in range(ent2.end, ent1.start)])
+                                #lengths.append(ent1.start - ent2.end)
+                                #token_indices.extend([i for i in range(ent2.end, ent1.start)])
+                                #print(ent1.start - ent2.end)
+                                if (ent1.start - ent2.end) > 5: longenough = True
+
+                            #low = min(ent1.start, ent2.start)
+                            #high = max(ent1.end, ent2.end)
+                            #print(ent1.start, ent1.end, ent2.start, ent2.end, low, high)
+
+                            if longenough:
+                                instances.append((ent1, ent2))
+
         return instances
 
     return get_instances
@@ -71,15 +118,53 @@ def instance_forward(model: Model[List[Doc], Floats2d], docs: List[Doc], is_trai
         for instance in instances:
 
 
-            #for ent in instance:
-            #    token_indices.extend([i for i in range(ent.start, ent.end)])
-            #    lengths.append(ent.end - ent.start)
+#            for ent in instance:
+#                token_indices.extend([i for i in range(ent.start, ent.end)])
+#                lengths.append(ent.end - ent.start)
 
 
             ent1 = instance[0]
             ent2 = instance[1]
-            token_indices.extend([i for i in range(ent1.start, ent2.end)])
-            lengths.append(ent2.end - ent1.start)
+
+            if ent1.start < ent2.start:
+                #lowent = ent1
+                #highent = ent2
+                #print('ent1 was low')
+
+                #token_indices.extend([i for i in range(ent1.start, ent2.start)])
+                #lengths.append(ent2.start - ent1.start)
+
+                #token_indices.extend([i for i in range(ent1.end, ent2.end)])
+                #lengths.append(ent2.end - ent1.end)
+
+                token_indices.extend([i for i in range(ent1.end, ent2.start)])
+                lengths.append(ent2.start - ent1.end)
+                token_indices.extend([i for i in range(ent1.end, ent2.start)])
+                #print(ent2.start - ent1.end)
+                lengths.append(ent2.start - ent1.end)
+
+
+            else:
+                #lowent = ent2
+                #highent = ent1
+                #print('ent2 was low')
+
+                #token_indices.extend([i for i in range(ent2.end, ent1.end)])
+                #lengths.append(ent1.end - ent2.end)
+
+                #token_indices.extend([i for i in range(ent2.start, ent1.start)])
+                #lengths.append(ent1.start - ent2.start)
+
+                token_indices.extend([i for i in range(ent2.end, ent1.start)])
+                lengths.append(ent1.start - ent2.end)
+                token_indices.extend([i for i in range(ent2.end, ent1.start)])
+                #print(ent1.start - ent2.end)
+                lengths.append(ent1.start - ent2.end)
+
+            #low = min(ent1.start, ent2.start)
+            #high = max(ent1.end, ent2.end)
+            #print(ent1.start, ent1.end, ent2.start, ent2.end, low, high)
+
 
 
         ents.append(tokvec[token_indices])

@@ -21,6 +21,7 @@ if ( __name__ == "__main__"):
     parser.add_argument('-min', '--minlen', type=int, default=4, help='Minimum length in characters of the text field in each json line which will be included in the output DocBin. i.e. all lines with a shorter text field will be omitted.')
     parser.add_argument('-rmt', '--relmaxtok', type=int, help='The maximum number of tokens which a rel should be allowed to span. Relationships which span more tokens than this will be ignored.')
     parser.add_argument('-me', '--minents', help='Comma separated list of ents and the number of them required for the Doc to be included in the DocBin. Number required specified after a colon. eg. OFF:2,DEFENDANT:2')
+    parser.add_argument('-rn', '--relnegations', help='Comma separated list of rel negations in the format ENTA:ENTB:REL:NEGATION_REL. For each comination of ENTA and ENTB for which there is no relation REL, create a relation NEGATION_REL. eg. DEFENDANT:OFF:DEFOFF:DEFOFF_NEGATION')
 
     args = parser.parse_args()
 
@@ -72,6 +73,17 @@ if ( __name__ == "__main__"):
             minents[minentkv[0]] = int(minentkv[1])
 
         print('minents: ' + str(minents))
+
+    relnegations = []
+
+    if args.relnegations:
+        rndefs = args.relnegations.split(',')
+        for rndef in rndefs:
+            rnvs = rndef.split(':')
+            relnegations.append((rnvs[0], rnvs[1], rnvs[2], rnvs[3]))
+
+        print('relnegations: ' + str(relnegations))
+
 
 
     print('infile: ' + str(args.infile))
@@ -229,15 +241,56 @@ if ( __name__ == "__main__"):
                         print()
                         exit(1)
 
-                    if len(rels) > 0:
+                    if len(rels) > 0 and suitable == True:
 
                         assigned_rels = 0
 
                         # Filter out the rels which we are not interested in
                         filtered_rels = list(filter(lambda x: x['label'] in rels, jd['rels']))
 
+
+
+
+
+                        # If required, create negative rels
+                        if len(relnegations) > 0:
+
+                            negative_rels = []
+
+                            for relnegation in relnegations:
+
+                                enta_label = relnegation[0]
+                                entb_label = relnegation[1]
+                                rel_label = relnegation[2]
+                                rel_neg_label = relnegation[3]
+
+                                for spana in filtered_spans:
+                                    for spanb in filtered_spans:
+
+                                        if ents[spana['label']] == enta_label and ents[spanb['label']] == entb_label:
+
+                                            # Are these two related?
+                                            related = False
+                                            for rel in filtered_rels:
+
+                                                if rel['label'] == rel_label and spana['uid'] == rel['headuid'] and spanb['uid'] == rel['childuid']:
+                                                    related = True
+                                                    break
+
+                                            if related == False:
+                                                ngrel = {}
+                                                ngrel['label'] = rel_neg_label
+                                                ngrel['headuid'] = spana['uid']
+                                                ngrel['childuid'] = spanb['uid']
+                                                negative_rels.append(ngrel)
+
+                            filtered_rels.extend(negative_rels)
+                        # End of negative rels
+
+
+
                         # Add the correct head and child index values to each rel, using the uids to look them up                 
-                        for rel in filtered_rels:                  
+                        for rel in filtered_rels:
                     
                             try:
                                 rel['head'] = next(i for i,x in enumerate(filtered_spans) if 'uid' in x and x['uid'] == rel['headuid'])
@@ -304,8 +357,6 @@ if ( __name__ == "__main__"):
 
                 if len(minents) > 0 and suitable == True:
 
-                    suitable = False
-
                     for minent in minents:
 
                         entname = minent
@@ -317,9 +368,10 @@ if ( __name__ == "__main__"):
 
                             if ent.label_ == entname: total += 1
 
-                        if total >= required:
+                        if total < required:
 
-                            suitable = True
+                            suitable = False
+
 
 
                 if args.outfile is None and suitable:
