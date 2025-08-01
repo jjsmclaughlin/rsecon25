@@ -34,8 +34,8 @@ def create_instances(max_length: int) -> Callable[[Doc], List[Tuple[Span, Span]]
                 if ent1 != ent2:
                     if max_length and abs(ent2.start - ent1.start) <= max_length:
                         #print(ent1.label_)
-                        #if (ent1.label_ == 'DEFENDANT' and ent2.label_ == 'OFF') or (ent2.label_ == 'DEFENDANT' and ent1.label_ == 'OFF'):
-                        if ent1.label_ == 'DEFENDANT' and ent2.label_ == 'OFF':
+                        if (ent1.label_ == 'DEFENDANT' and ent2.label_ == 'OFF') or (ent2.label_ == 'DEFENDANT' and ent1.label_ == 'OFF'):
+                        #if ent1.label_ == 'DEFENDANT' and ent2.label_ == 'OFF':
         
                             longenough = False
 

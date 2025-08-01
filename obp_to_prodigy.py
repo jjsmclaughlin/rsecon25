@@ -203,6 +203,7 @@ if ( __name__ == "__main__"):
     teipath = os.path.expanduser("~/old-bailey/data/tei/sessionsPapers")
     teifiles = os.listdir(teipath)
     for file in teifiles:
+        # if file.startswith('172') or file.startswith('173') or file.startswith('174') or file.startswith('175') or file.startswith('176') or file.startswith('177'): # For now we only process the 1730s
         if file.startswith('173'): # For now we only process the 1730s
             todo.append(teipath + "/" + file)
 
@@ -288,6 +289,7 @@ if ( __name__ == "__main__"):
 
     # Save our jsonl
     random.shuffle(prodigy)
+    #jsonfile = open("jsonl/obpxl.jsonl", "w")
     jsonfile = open("jsonl/obp.jsonl", "w")
     for pdatum in prodigy:
         jsonfile.write(json.dumps(pdatum) + '\n')

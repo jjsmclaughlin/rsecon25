@@ -22,6 +22,7 @@ if ( __name__ == "__main__"):
     parser.add_argument('-rmt', '--relmaxtok', type=int, help='The maximum number of tokens which a rel should be allowed to span. Relationships which span more tokens than this will be ignored.')
     parser.add_argument('-me', '--minents', help='Comma separated list of ents and the number of them required for the Doc to be included in the DocBin. Number required specified after a colon. eg. OFF:2,DEFENDANT:2')
     parser.add_argument('-rn', '--relnegations', help='Comma separated list of rel negations in the format ENTA:ENTB:REL:NEGATION_REL. For each comination of ENTA and ENTB for which there is no relation REL, create a relation NEGATION_REL. eg. DEFENDANT:OFF:DEFOFF:DEFOFF_NEGATION')
+    parser.add_argument('-ri', '--relinv', help='Comma separated list of inverse rels in the format REL:INVERSE_REL. For each instance of relation REL, an inverse relation with the name INVERSE_REL will be added. eg. DEFOFF:OFFDEF,DEFOFF_NEGATION:OFFDEF_NEGATION')
 
     args = parser.parse_args()
 
@@ -84,6 +85,15 @@ if ( __name__ == "__main__"):
 
         print('relnegations: ' + str(relnegations))
 
+    relinvs = {}
+
+    if args.relinv:
+        ridefs = args.relinv.split(',')
+        for ridef in ridefs:
+            rivs = ridef.split(':')
+            relinvs[rivs[0]] = rivs[1]
+
+        print('relinvs: ' + str(relinvs))
 
 
     print('infile: ' + str(args.infile))
@@ -116,6 +126,8 @@ if ( __name__ == "__main__"):
         docs_added = 0
         rejected_spans = []
         reltoptok = 0
+        minspan = None
+        maxspan = None
 
         for jsonline in tqdm(jsonlines[args.start:end], ascii=True, ncols=60):
 
@@ -160,6 +172,9 @@ if ( __name__ == "__main__"):
 
                             spacy_spans.append(spacy_span)
                             assigned_spans += 1
+                            spanlen = spacy_span.end - spacy_span.start
+                            if maxspan is None or spanlen > maxspan: maxspan = spanlen
+                            if minspan is None or spanlen < minspan: minspan = spanlen
                     
                     # If we didn't assign any spans then this document is not suitable for inclusion in the docbin.
                     if assigned_spans == 0: suitable = False
@@ -286,6 +301,30 @@ if ( __name__ == "__main__"):
 
                             filtered_rels.extend(negative_rels)
                         # End of negative rels
+
+
+
+
+                        # If required, create inverse rels
+                        if len(relinvs) > 0:
+
+                            inverse_rels = []
+
+                            for rel in filtered_rels:
+
+                                if rel['label'] in relinvs:
+
+                                    invrel = {}
+                                    invrel['label'] = relinvs[rel['label']]
+                                    invrel['headuid'] = rel['childuid']
+                                    invrel['childuid'] = rel['headuid']
+                                    inverse_rels.append(invrel)
+
+                            filtered_rels.extend(inverse_rels)
+                        # End of inverse rels
+
+
+
 
 
 
@@ -433,6 +472,9 @@ if ( __name__ == "__main__"):
         print('Added ' + str(docs_added) + ' docs from ' + str(docs_attempted) + ' attempted (' + str(round((docs_added / docs_attempted) * 100, 2)) + '%).')
 
         if reltoptok > 0: print('Longest relattionship (in tokens) was: ' + str(reltoptok))
+
+        if minspan is not None: print('Shortest span was: ' + str(minspan))
+        if maxspan is not None: print('Longest span was: ' + str(maxspan))
 
         print(str(len(rejected_spans)) + ' rejected spans:')
         for rejected_span in rejected_spans:
