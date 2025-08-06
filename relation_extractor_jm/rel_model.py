@@ -33,53 +33,16 @@ def create_instances(max_length: int) -> Callable[[Doc], List[Tuple[Span, Span]]
             for ent2 in doc.ents:
                 if ent1 != ent2:
                     if max_length and abs(ent2.start - ent1.start) <= max_length:
-                        #print(ent1.label_)
-                        if (ent1.label_ == 'DEFENDANT' and ent2.label_ == 'OFF') or (ent2.label_ == 'DEFENDANT' and ent1.label_ == 'OFF'):
-                        #if ent1.label_ == 'DEFENDANT' and ent2.label_ == 'OFF':
-        
-                            longenough = False
 
-                            if ent1.start < ent2.start:
-                                #lowent = ent1
-                                #highent = ent2
-                                #print('ent1 was low')
+###### JM ######
 
-                                #token_indices.extend([i for i in range(ent1.start, ent2.start)])
-                                #lengths.append(ent2.start - ent1.start)
+#                        instances.append((ent1, ent2))
 
-                                #token_indices.extend([i for i in range(ent1.end, ent2.end)])
-                                #lengths.append(ent2.end - ent1.end)
+                        if ent1.label_ == 'DEFENDANT' and ent2.label_ == 'OFF':
 
-                                #token_indices.extend([i for i in range(ent1.end, ent2.start)])
-                                #lengths.append(ent2.start - ent1.end)
-                                #token_indices.extend([i for i in range(ent1.end, ent2.start)])
-                                #print(ent2.start - ent1.end)
-                                if (ent2.start - ent1.end) > 5: longenough = True
+                            instances.append((ent1, ent2))
 
-
-                            else:
-                                #lowent = ent2
-                                #highent = ent1
-                                #print('ent2 was low')
-
-                                #token_indices.extend([i for i in range(ent2.end, ent1.end)])
-                                #lengths.append(ent1.end - ent2.end)
-
-                                #token_indices.extend([i for i in range(ent2.start, ent1.start)])
-                                #lengths.append(ent1.start - ent2.start)
-
-                                #token_indices.extend([i for i in range(ent2.end, ent1.start)])
-                                #lengths.append(ent1.start - ent2.end)
-                                #token_indices.extend([i for i in range(ent2.end, ent1.start)])
-                                #print(ent1.start - ent2.end)
-                                if (ent1.start - ent2.end) > 5: longenough = True
-
-                            #low = min(ent1.start, ent2.start)
-                            #high = max(ent1.end, ent2.end)
-                            #print(ent1.start, ent1.end, ent2.start, ent2.end, low, high)
-
-                            if longenough:
-                                instances.append((ent1, ent2))
+################
 
         return instances
 
@@ -113,90 +76,91 @@ def instance_forward(model: Model[List[Doc], Floats2d], docs: List[Doc], is_trai
     ents = []
     lengths = []
 
+###### JM ######
+
     for doc_nr, (instances, tokvec) in enumerate(zip(all_instances, tokvecs)):
-        token_indices = []
-        for instance in instances:
+        doc_token_indices = []
+        doc_lengths = []
 
-
-#            for ent in instance:
-#                token_indices.extend([i for i in range(ent.start, ent.end)])
-#                lengths.append(ent.end - ent.start)
-
-
-            ent1 = instance[0]
-            ent2 = instance[1]
-
-            if ent1.start < ent2.start:
-                #lowent = ent1
-                #highent = ent2
-                #print('ent1 was low')
-
-                #token_indices.extend([i for i in range(ent1.start, ent2.start)])
-                #lengths.append(ent2.start - ent1.start)
-
-                #token_indices.extend([i for i in range(ent1.end, ent2.end)])
-                #lengths.append(ent2.end - ent1.end)
-
-                token_indices.extend([i for i in range(ent1.end, ent2.start)])
-                lengths.append(ent2.start - ent1.end)
-                token_indices.extend([i for i in range(ent1.end, ent2.start)])
-                #print(ent2.start - ent1.end)
-                lengths.append(ent2.start - ent1.end)
-
-
+        for span1, span2 in instances:
+            # Use only context tokens between the two spans
+            if span1.end <= span2.start:
+                context_indices = list(range(span1.end, span2.start))
+            elif span2.end <= span1.start:
+                context_indices = list(range(span2.end, span1.start))
             else:
-                #lowent = ent2
-                #highent = ent1
-                #print('ent2 was low')
+                context_indices = []
 
-                #token_indices.extend([i for i in range(ent2.end, ent1.end)])
-                #lengths.append(ent1.end - ent2.end)
+            # If no context tokens, use a fallback (e.g. span2.start token)
+            if not context_indices:
+                context_indices = [span2.start]
 
-                #token_indices.extend([i for i in range(ent2.start, ent1.start)])
-                #lengths.append(ent1.start - ent2.start)
+            doc_token_indices.extend(context_indices)
+            doc_lengths.append(len(context_indices))
 
-                token_indices.extend([i for i in range(ent2.end, ent1.start)])
-                lengths.append(ent1.start - ent2.end)
-                token_indices.extend([i for i in range(ent2.end, ent1.start)])
-                #print(ent1.start - ent2.end)
-                lengths.append(ent1.start - ent2.end)
+        ents.append(tokvec[doc_token_indices])
+        lengths.extend(doc_lengths)
 
-            #low = min(ent1.start, ent2.start)
-            #high = max(ent1.end, ent2.end)
-            #print(ent1.start, ent1.end, ent2.start, ent2.end, low, high)
+################
 
-
-
-        ents.append(tokvec[token_indices])
     lengths = cast(Ints1d, model.ops.asarray(lengths, dtype="int32"))
     entities = Ragged(model.ops.flatten(ents), lengths)
     pooled, bp_pooled = pooling(entities, is_train)
 
+###### JM ######
+
     # Reshape so that pairs of rows are concatenated
-    relations = model.ops.reshape2f(pooled, -1, pooled.shape[1] * 2)
+    #relations = model.ops.reshape2f(pooled, -1, pooled.shape[1] * 2)
+    #relations = model.ops.reshape2f(pooled, -1, pooled.shape[1] * 3)
+    relations = pooled
+
+################
+
+###### JM ######
 
     def backprop(d_relations: Floats2d) -> List[Doc]:
-        d_pooled = model.ops.reshape2f(d_relations, d_relations.shape[0] * 2, -1)
-        d_ents = bp_pooled(d_pooled).data
+
+        #d_pooled = model.ops.reshape2f(d_relations, d_relations.shape[0] * 2, -1)
+        #d_pooled = model.ops.reshape2f(d_relations, d_relations.shape[0] * 3, -1)
+        #d_pooled = d_relations
+
+        d_ents = bp_pooled(d_relations).data
+
         d_tokvecs = []
+
         ent_index = 0
-        for doc_nr, instances in enumerate(all_instances):
-            shape = tokvecs[doc_nr].shape
+        for doc_nr, (instances, tokvec) in enumerate(zip(all_instances, tokvecs)):
+            shape = tokvec.shape
             d_tokvec = model.ops.alloc2f(*shape)
             count_occ = model.ops.alloc2f(*shape)
-            for instance in instances:
-                for ent in instance:
-                    d_tokvec[ent.start : ent.end] += d_ents[ent_index]
-                    count_occ[ent.start : ent.end] += 1
-                    ent_index += ent.end - ent.start
-            d_tokvec /= count_occ + 0.00000000001
+
+            for span1, span2 in instances:
+                # Same logic as in forward to get context indices
+                if span1.end <= span2.start:
+                    context_indices = list(range(span1.end, span2.start))
+                elif span2.end <= span1.start:
+                    context_indices = list(range(span2.end, span1.start))
+                else:
+                    context_indices = []
+
+                if not context_indices:
+                    context_indices = [span2.start]
+
+                for i in context_indices:
+                    d_tokvec[i] += d_ents[ent_index]
+                    count_occ[i] += 1
+
+                    ent_index += 1
+
+            d_tokvec /= (count_occ + 1e-8)
             d_tokvecs.append(d_tokvec)
 
         d_docs = bp_tokvecs(d_tokvecs)
         return d_docs
 
-    return relations, backprop
+################
 
+    return relations, backprop
 
 def instance_init(model: Model, X: List[Doc] = None, Y: Floats2d = None) -> Model:
     tok2vec = model.get_ref("tok2vec")
