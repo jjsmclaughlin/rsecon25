@@ -1,0 +1,408 @@
+
+--------------------------------
+
+dcr_mu_t2v_rjm --> dcr_test_mu
+
+threshold 0.50   {'rel_micro_p': '98.04', 'rel_micro_r': '81.97', 'rel_micro_f': '89.29'}
+
+PRED RELS:
+DEFOFF 0.9999658
++ DEFENDANT            2  -> 7   Delina Poole  otherwise Totley
++ OFF                  11 -> 27  stealing a Cotton-Gown, two Shirts, a silk Petticoat and a Linnen Handkerchief
+
+DEFOFF 0.238507
++ DEFENDANT            2  -> 7   Delina Poole  otherwise Totley
++ OFF                  44 -> 60  feloniously receiving two Shirts, a Handkerchief and the Petticoat, knowing them to be stole
+
+DEFOFF 0.9999976
++ DEFENDANT            40 -> 42  Ester Wyat
++ OFF                  44 -> 60  feloniously receiving two Shirts, a Handkerchief and the Petticoat, knowing them to be stole
+
+--------------------------------
+
+dcr_mu_tra_rjm --> dcr_test_mu
+
+threshold 0.50   {'rel_micro_p': '92.19', 'rel_micro_r': '96.72', 'rel_micro_f': '94.40'}
+
+PRED RELS:
+DEFOFF 0.9999938
++ DEFENDANT            2  -> 7   Delina Poole  otherwise Totley
++ OFF                  11 -> 27  stealing a Cotton-Gown, two Shirts, a silk Petticoat and a Linnen Handkerchief
+
+DEFOFF 0.9999988
++ DEFENDANT            40 -> 42  Ester Wyat
++ OFF                  44 -> 60  feloniously receiving two Shirts, a Handkerchief and the Petticoat, knowing them to be stole
+
+-------------------------------
+
+dvr_mu_t2v_rjm_test --> dvr_test_mu 104 training, 25 dev 
+
+threshold 0.50   {'rel_micro_p': '52.83', 'rel_micro_r': '77.78', 'rel_micro_f': '62.92'}
+
+PRED RELS:
+DEFVER 0.31934133
++ DEFENDANT            2  -> 7   Delina Poole  otherwise Totley
++ VER                  62 -> 63  Guilty
+
+DEFVER 0.43434346
++ DEFENDANT            2  -> 7   Delina Poole  otherwise Totley
++ VER                  67 -> 68  Acquitted
+
+DEFVER 0.25662106
++ DEFENDANT            40 -> 42  Ester Wyat
++ VER                  62 -> 63  Guilty
+
+DEFVER 0.5449071
++ DEFENDANT            40 -> 42  Ester Wyat
++ VER                  67 -> 68  Acquitted
+
+------------------------------
+
+dvr_mn_t2v_rjm_test --> dvr_test_mn 110 training, 29 dev 
+
+threshold 0.50   {'rel_micro_p': '64.94', 'rel_micro_r': '64.10', 'rel_micro_f': '64.52'}
+
+PRED RELS:
+DEFVER 0.4193718
++ DEFENDANT            2  -> 7   Delina Poole  otherwise Totley
++ VER                  62 -> 63  Guilty
+
+NO_REL 0.50490195
++ DEFENDANT            2  -> 7   Delina Poole  otherwise Totley
++ VER                  62 -> 63  Guilty
+
+DEFVER 0.5124456
++ DEFENDANT            2  -> 7   Delina Poole  otherwise Totley
++ VER                  67 -> 68  Acquitted
+
+NO_REL 0.43913078
++ DEFENDANT            2  -> 7   Delina Poole  otherwise Totley
++ VER                  67 -> 68  Acquitted
+
+DEFVER 0.4076005
++ DEFENDANT            40 -> 42  Ester Wyat
++ VER                  62 -> 63  Guilty
+
+NO_REL 0.5288955
++ DEFENDANT            40 -> 42  Ester Wyat
++ VER                  62 -> 63  Guilty
+
+DEFVER 0.6309196
++ DEFENDANT            40 -> 42  Ester Wyat
++ VER                  67 -> 68  Acquitted
+
+NO_REL 0.36869314
++ DEFENDANT            40 -> 42  Ester Wyat
++ VER                  67 -> 68  Acquitted
+
+-------------------------------
+
+dvr_mu_tra_rjm_test --> dvr_test_mu 104 training, 25 dev
+
+threshold 0.50   {'rel_micro_p': '50.70', 'rel_micro_r': '100.00', 'rel_micro_f': '67.29'}
+
+PRED RELS:
+DEFVER 0.63959527
++ DEFENDANT            2  -> 7   Delina Poole  otherwise Totley
++ VER                  62 -> 63  Guilty
+
+DEFVER 0.662765
++ DEFENDANT            2  -> 7   Delina Poole  otherwise Totley
++ VER                  67 -> 68  Acquitted
+
+DEFVER 0.58742493
++ DEFENDANT            40 -> 42  Ester Wyat
++ VER                  62 -> 63  Guilty
+
+DEFVER 0.6552647
++ DEFENDANT            40 -> 42  Ester Wyat
++ VER                  67 -> 68  Acquitted
+
+
+--------------------------------
+
+best threshold 0.50   {'rel_micro_p': '52.70', 'rel_micro_r': '100.00', 'rel_micro_f': '69.03'}
+
+PRED RELS:
+DEFVER 0.64585865
++ DEFENDANT            2  -> 7   Delina Poole  otherwise Totley
++ VER                  62 -> 63  Guilty
+
+NO_REL 0.67508113
++ DEFENDANT            2  -> 7   Delina Poole  otherwise Totley
++ VER                  62 -> 63  Guilty
+
+DEFVER 0.646914
++ DEFENDANT            2  -> 7   Delina Poole  otherwise Totley
++ VER                  67 -> 68  Acquitted
+
+NO_REL 0.67178404
++ DEFENDANT            2  -> 7   Delina Poole  otherwise Totley
++ VER                  67 -> 68  Acquitted
+
+DEFVER 0.6580781
++ DEFENDANT            40 -> 42  Ester Wyat
++ VER                  62 -> 63  Guilty
+
+NO_REL 0.656888
++ DEFENDANT            40 -> 42  Ester Wyat
++ VER                  62 -> 63  Guilty
+
+DEFVER 0.6581479
++ DEFENDANT            40 -> 42  Ester Wyat
++ VER                  67 -> 68  Acquitted
+
+NO_REL 0.6524517
++ DEFENDANT            40 -> 42  Ester Wyat
++ VER                  67 -> 68  Acquitted
+
+
+
+
+--------------------------------
+
+dcr_mn_t2v_rjm --> dcr_dev_sn
+
+threshold 0.50   {'rel_micro_p': '93.24', 'rel_micro_r': '95.83', 'rel_micro_f': '94.52'}
+
+PRED RELS:
+DEFOFF 0.99999785
++ DEFENDANT            2  -> 7   Delina Poole  otherwise Totley
++ OFF                  11 -> 27  stealing a Cotton-Gown, two Shirts, a silk Petticoat and a Linnen Handkerchief
+
+DEFOFF 0.13082027
++ DEFENDANT            2  -> 7   Delina Poole  otherwise Totley
++ OFF                  44 -> 60  feloniously receiving two Shirts, a Handkerchief and the Petticoat, knowing them to be stole
+
+NO_REL 0.8907174
++ DEFENDANT            2  -> 7   Delina Poole  otherwise Totley
++ OFF                  44 -> 60  feloniously receiving two Shirts, a Handkerchief and the Petticoat, knowing them to be stole
+
+NO_REL 0.9999883
++ DEFENDANT            40 -> 42  Ester Wyat
++ OFF                  11 -> 27  stealing a Cotton-Gown, two Shirts, a silk Petticoat and a Linnen Handkerchief
+
+DEFOFF 1.0
++ DEFENDANT            40 -> 42  Ester Wyat
++ OFF                  44 -> 60  feloniously receiving two Shirts, a Handkerchief and the Petticoat, knowing them to be stole
+
+--------------------------------
+
+
+
+dcr_t2v_rel
+    dcr_test_lg     93.42   99.13   96.19
+    dcr_test_mu     72.50   95.08   82.27
+
+dcr_lg_t2v_rel
+    dcr_test_lg     91.37   99.83   95.41
+    dcr_test_mu     66.30   100.00  79.74
+
+dcr_mu_t2v_rel
+    dcr_test_lg     91.24   100.00  95.42
+    dcr_test_mu     65.59   100.00  79.22
+
+dcr_tra_rel
+    dcr_test_lg     93.86   98.78   96.26
+    dcr_test_mu     72.73   91.80   81.16
+
+dcr_md_tra_rel
+    dcr_test_lg     92.23   99.48   95.72   
+    dcr_test_mu     68.24   95.08   79.45
+
+dcr_mu_tra_rel
+    dcr_test_lg     94.75   97.56   96.13
+    dcr_test_mu     72.73   91.80   81.16 .. ?
+
+
+dcr_train_mx Added 410 docs from 19646 attempted (2.09%)
+dcr_dev_mx Added 130 docs from 5612 attempted (2.32%)
+
+dcr_train_mn dcr_dev_mn 411 training docs, 130 evaluation docs (multiple defendants, offences, more trials from 18th century condiered)
+
+dcr_mn_t2v_rel
+threshold 0.50   {'rel_micro_p': '55.23', 'rel_micro_r': '64.96', 'rel_micro_f': '59.70'}
+
+
+dcr_mn_tra_rel
+threshold 0.50   {'rel_micro_p': '60.07', 'rel_micro_r': '69.51', 'rel_micro_f': '64.44'}
+
+
+21. Humphry Belmosset *, was indicted for as saulting Ann Metcalf on the Highway, and robbing her of a Necklace, and five Shillings. Acquitted. * Belmosset (by the Name of Benjamin Belmosset ) was capitally Convicted in December, 1730.
+
+Morgan Ellis, of St. Giles's in the Fields, was indicted for feloniously stealing a Pair of Sheets, value 5 s. the Goods of William Fowler, the 7th of May last. The Prosecutor depos'd, The Prisoner was his Lodger, and went away, and examining his Lodging after he was gone, the Sheets were missing; but there not being sufficient Proof that the Prisoner stole the Sheets, he was acquitted.
+
+41, 42. William Lee, was indicted for stealing 16 lb. of Hog's Bristles, value 16 s. in the Parish of St. Magnus the Martyr, the Goods of William Thorp, April 5. And, Robert Davidson, for receiving the same, knowing them to be stole. Both Acquitted. 43. Robert Davison, was a 2d Time indicted with John Gosling, for stealing 12 lb. of Hogs Bristles, value 12 s. the Goods of William Thorp, June 15. Both Acquitted.
+i
+
+William Lee >> DEFOFF 0.5875244 >> stealing
+William Lee >> DEFOFF 0.45266044 >> receiving the same, knowing them to be stole
+Robert Davidson >> DEFOFF 0.58627 >> stealing
+Robert Davidson >> DEFOFF 0.45137882 >> receiving the same, knowing them to be stole
+
+
+
+
+
+
+PRED RELS:
+DEFOFF 0.58772635
++ DEFENDANT            2  -> 7   Delina Poole  otherwise Totley
++ OFF                  11 -> 27  stealing a Cotton-Gown, two Shirts, a silk Petticoat and a Linnen Handkerchief
+
+DEFOFF 0.51856935
++ DEFENDANT            2  -> 7   Delina Poole  otherwise Totley
++ OFF                  44 -> 60  feloniously receiving two Shirts, a Handkerchief and the Petticoat, knowing them to be stole
+
+DEFOFF 0.5985093
++ DEFENDANT            40 -> 42  Ester Wyat
++ OFF                  11 -> 27  stealing a Cotton-Gown, two Shirts, a silk Petticoat and a Linnen Handkerchief
+
+DEFOFF 0.5297138
++ DEFENDANT            40 -> 42  Ester Wyat
++ OFF                  44 -> 60  feloniously receiving two Shirts, a Handkerchief and the Petticoat, knowing them to be stole
+
+
+⚠ Low number of examples for label 'INFANTICIDE' (12)
+⚠ Low number of examples for label 'FRAUD' (16)
+⚠ Low number of examples for label 'PETTYLARCENY' (17)
+⚠ Low number of examples for label 'EXTORTION' (10)
+⚠ Low number of examples for label 'FORGERY' (20)
+⚠ Low number of examples for label 'COININGOFFENCES' (12)
+⚠ Low number of examples for label 'RAPE' (21)
+⚠ Low number of examples for label 'BIGAMY' (44)
+⚠ Low number of examples for label 'PERJURY' (33)
+⚠ Low number of examples for label 'PERVERTINGJUSTICE' (13)
+⚠ Low number of examples for label 'HOUSEBREAKING' (44)
+
+
+
+45.82  43.98  44.88 
+
+GRANDLARCENY      42.69   94.30   58.78
+PETTYLARCENY       0.00    0.00    0.00
+THEFT              0.00    0.00    0.00
+THEFTFROMPLACE     0.00    0.00    0.00
+BURGLARY          45.83   57.89   51.16
+MURDER            25.00   33.33   28.57
+POCKETPICKING     50.00   80.77   61.76
+RECEIVING         86.67   54.17   66.67
+SHOPLIFTING        0.00    0.00    0.00
+HIGHWAYROBBERY    67.65   82.14   74.19
+ROBBERY            0.00    0.00    0.00
+ANIMALTHEFT        0.00    0.00    0.00
+FORGERY            0.00    0.00    0.00
+HOUSEBREAKING      0.00    0.00    0.00
+BIGAMY             0.00    0.00    0.00
+PERJURY            0.00    0.00    0.00
+FRAUD              0.00    0.00    0.00
+
+
+84.21 83.53 83.87 +38.99
+
+GRANDLARCENY         88.34    91.14   89.72 +30.94
+PETTYLARCENY         50.00    20.00   28.57 +28.57
+THEFT                95.05    94.12   94.58 +94.58
+THEFTFROMPLACE       84.00    89.36   86.60 +86.60
+BURGLARY             78.95    78.95   78.95 +27.79
+MURDER               16.67    16.67   16.67 -11.90
+POCKETPICKING        85.19    88.46   86.79 +25.03
+RECEIVING            81.82    75.00   78.26 +11.59
+SHOPLIFTING          88.46    85.19   86.79 +86.79
+HIGHWAYROBBERY       71.88    82.14   76.67 +2.48
+ROBBERY             100.00    57.14   72.73 +72.23
+ANIMALTHEFT          78.95    75.00   76.92 +76.92
+FORGERY              66.67    50.00   57.14 +57.14
+HOUSEBREAKING        75.00    60.00   66.67 +66.67
+BIGAMY               66.67    66.67   66.67 +66.67
+PERJURY              20.00    20.00   20.00 +20.00
+FRAUD                60.00   100.00   75.00 +75.00
+
+
+
+
+GRANDLARCENY       85.37   26.52   40.46
+PETTYLARCENY      100.00   20.00   33.33
+THEFT             100.00   22.68   36.97
+THEFTFROMPLACE     87.50   24.14   37.84
+BURGLARY            0.00    0.00    0.00
+MURDER              0.00    0.00    0.00
+POCKETPICKING     100.00    8.33   15.38
+RECEIVING         100.00    9.09   16.67
+SHOPLIFTING        81.82   42.86   56.25
+HIGHWAYROBBERY      0.00    0.00    0.00
+ROBBERY             0.00    0.00    0.00
+ANIMALTHEFT         0.00    0.00    0.00
+HOUSEBREAKING       0.00    0.00    0.00
+BIGAMY              0.00    0.00    0.00
+PERJURY             0.00    0.00    0.00
+FRAUD               0.00    0.00    0.00
+
+
+
+
+
+
+
+dvv_tra_ner         ->        dvv_test
+
+96.12       97.41       96.76 
+
+dvv_md_tra_ner      ->        dvv_test
+
+96.14       95.54       95.84 
+
+dvv_tra_ner         ->        dvv_test_lg
+
+92.51       96.26       94.35 
+
+dvv_md_tra_ner      ->        dvv_test_lg.spacy
+
+94.47       95.12       94.79 
+
+
+
+
+
+
+
+
+
+
+
+-------------------------------------------------------------------------
+NER P   94.24 
+NER R   93.57 
+NER F   93.91 
+SPEED   41194 
+
+
+=============================== NER (per type) ===============================
+
+                P       R       F
+DEFENDANT   95.72   97.19   96.45
+VICTIM      92.72   90.44   91.56
+NOTGUILTY   88.64   86.67   87.64
+GUILTY      97.35   96.49   96.92
+
+dvv_t2v_ner on dvv_test_lg
+
+NER P   85.27 
+NER R   92.02 
+NER F   88.52 
+
+
+dvv_lg_t2v_ner
+
+
+DEFENDANT   80.20   94.74   86.86
+VICTIM      49.58   81.25   61.58
+GUILTY      79.55   84.34   81.87
+NOTGUILTY   84.85   91.80   88.19
+
+
+DEFENDANT   96.43   94.74   95.58
+VICTIM      77.78   77.78   77.78
+GUILTY      87.50   84.34   85.89
+NOTGUILTY   90.62   95.08   92.80
+

@@ -100,13 +100,16 @@ prodigy_to_docbin:
 	# dvr: Defendant verdict relationship testing
 	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dvr_train.spacy -s0 -e3270 --ents=DEFENDANT,GUILTY:VER,NOTGUILTY:VER --rels=DEFVER --relmaxtok=64 --maxlen=1000
 	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dvr_train_lg.spacy -s0 -e3270 --ents=DEFENDANT,GUILTY:VER,NOTGUILTY:VER --rels=DEFVER --relmaxtok=100
-	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dvr_train_mu.spacy -s0 -e3270 --ents=DEFENDANT,GUILTY:VER,NOTGUILTY:VER --rels=DEFVER --relmaxtok=100 --minents=VER:2
+	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dvr_train_mu.spacy -s0 -e3270 --ents=DEFENDANT,GUILTY:VER,NOTGUILTY:VER --rels=DEFVER --relmaxtok=100 --minents=VER:2,DEFENDANT:2
+	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dvr_train_mn.spacy -s0 -e3270 --ents=DEFENDANT,GUILTY:VER,NOTGUILTY:VER --rels=DEFVER,NO_REL --relmaxtok=100 --minents=VER:2,DEFENDANT:2 --relnegations=DEFENDANT:VER:DEFVER:NO_REL
 	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dvr_dev.spacy -s3271 -e4205 --ents=DEFENDANT,GUILTY:VER,NOTGUILTY:VER --rels=DEFVER --relmaxtok=64 --maxlen=1000
 	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dvr_dev_lg.spacy -s3271 -e4205 --ents=DEFENDANT,GUILTY:VER,NOTGUILTY:VER --rels=DEFVER --relmaxtok=100
-	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dvr_dev_mu.spacy -s3271 -e4205 --ents=DEFENDANT,GUILTY:VER,NOTGUILTY:VER --rels=DEFVER --relmaxtok=100 --minents=VER:2
+	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dvr_dev_mu.spacy -s3271 -e4205 --ents=DEFENDANT,GUILTY:VER,NOTGUILTY:VER --rels=DEFVER --relmaxtok=100 --minents=VER:2,DEFENDANT:2
+	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dvr_dev_mn.spacy -s3271 -e4205 --ents=DEFENDANT,GUILTY:VER,NOTGUILTY:VER --rels=DEFVER,NO_REL --relmaxtok=100 --minents=VER:2,DEFENDANT:2 --relnegations=DEFENDANT:VER:DEFVER:NO_REL
 	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dvr_test.spacy -s4206 --ents=DEFENDANT,GUILTY:VER,NOTGUILTY:VER --rels=DEFVER --relmaxtok=64 --maxlen=1000
 	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dvr_test_lg.spacy -s4206 --ents=DEFENDANT,GUILTY:VER,NOTGUILTY:VER --rels=DEFVER
-	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dvr_test_mu.spacy -s4206 --ents=DEFENDANT,GUILTY:VER,NOTGUILTY:VER --rels=DEFVER --minents=VER:2
+	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dvr_test_mu.spacy -s4206 --ents=DEFENDANT,GUILTY:VER,NOTGUILTY:VER --rels=DEFVER --minents=VER:2,DEFENDANT:2
+	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dvr_test_mn.spacy -s4206 --ents=DEFENDANT,GUILTY:VER,NOTGUILTY:VER --rels=DEFVER,NO_REL --minents=VER:2,DEFENDANT:2 --relnegations=DEFENDANT:VER:DEFVER:NO_REL
 	# python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dvr_test_xl.spacy -s4206 --ents=DEFENDANT,GUILTY:VER,NOTGUILTY:VER --rels=DEFVER --minlen=1000
 	#
 	# ppo: Person Place Occupation relationship testing.
@@ -159,15 +162,14 @@ fillconfig:
 	# python -m spacy init fill-config ./baseconfigs/t2v_spc.cfg ./configs/t2v_spc.cfg
 	# python -m spacy init fill-config ./baseconfigs/t2v_spf.cfg ./configs/t2v_spf.cfg
 	# python -m spacy init fill-config ./baseconfigs/t2v_rel.cfg ./configs/t2v_rel.cfg -c ./relation_extractor/custom_functions.py
-	# python -m spacy init fill-config ./baseconfigs/t2v_rel_p.cfg ./configs/t2v_rel_p.cfg -c ./relation_extractor/custom_functions.py
+	# python -m spacy init fill-config ./baseconfigs/t2v_rjm.cfg ./configs/t2v_rjm.cfg -c ./relation_extractor_jm/custom_functions.py
 	#
 	# python -m spacy init fill-config ./baseconfigs/tra_ner.cfg ./configs/tra_ner.cfg
 	# python -m spacy init fill-config ./baseconfigs/tra_sps.cfg ./configs/tra_sps.cfg
 	# python -m spacy init fill-config ./baseconfigs/tra_spc.cfg ./configs/tra_spc.cfg
 	# python -m spacy init fill-config ./baseconfigs/tra_spf.cfg ./configs/tra_spf.cfg
 	# python -m spacy init fill-config ./baseconfigs/tra_rel.cfg ./configs/tra_rel.cfg -c ./relation_extractor/custom_functions.py
-	# python -m spacy init fill-config ./baseconfigs/tra_rel_p.cfg ./configs/tra_rel_p.cfg -c ./relation_extractor/custom_functions.py
-
+	# python -m spacy init fill-config ./baseconfigs/tra_rjm.cfg ./configs/tra_rjm.cfg -c ./relation_extractor_jm/custom_functions.py
 
 debug:
 	# source .venv/bin/activate
@@ -258,18 +260,19 @@ train:
 	# python -m spacy train ./configs/t2v_rel.cfg --output ./models/dcr_t2v_rel -c ./relation_extractor/custom_functions.py --paths.train ./docbins/dcr_train.spacy --paths.dev ./docbins/dcr_dev.spacy
 	# python -m spacy train ./configs/t2v_rel.cfg --output ./models/dcr_lg_t2v_rel -c ./relation_extractor/custom_functions.py --paths.train ./docbins/dcr_train_lg.spacy --paths.dev ./docbins/dcr_dev_lg.spacy
 	# python -m spacy train ./configs/t2v_rel.cfg --output ./models/dcr_mu_t2v_rel -c ./relation_extractor/custom_functions.py --paths.train ./docbins/dcr_train_mu.spacy --paths.dev ./docbins/dcr_dev_mu.spacy
-	# python -m spacy train ./configs/t2v_rel_p.cfg --output ./models/dcr_mu_t2v_rel_p -c ./relation_extractor/custom_functions.py --paths.train ./docbins/dcr_train_mu.spacy --paths.dev ./docbins/dcr_dev_mu.spacy 
 	#### python -m spacy train ./configs/t2v_rel.cfg --output ./models/dcr_mn_t2v_rel -c ./relation_extractor/custom_functions.py --paths.train ./docbins/dcr_train_mn.spacy --paths.dev ./docbins/dcr_dev_mn.spacy
 	#### python -m spacy train ./configs/t2v_rel.cfg --output ./models/dcr_mu_t2v_rej -c ./relation_extractor_jm/custom_functions.py --paths.train ./docbins/dcr_train_mu.spacy --paths.dev ./docbins/dcr_dev_mu.spacy
 	# python -m spacy train ./configs/t2v_rel.cfg --output ./models/dcr_mx_t2v_rel -c ./relation_extractor/custom_functions.py --paths.train ./docbins/dcr_train_mx.spacy --paths.dev ./docbins/dcr_dev_mx.spacy
 	# python -m spacy train ./configs/t2v_rel.cfg --output ./models/dcr_mn_t2v_rel -c ./relation_extractor/custom_functions.py --paths.train ./docbins/dcr_train_mn.spacy --paths.dev ./docbins/dcr_dev_mn.spacy
 	# python -m spacy train ./configs/t2v_rel.cfg --output ./models/dcr_mx_t2v_rjm -c ./relation_extractor_jm/custom_functions.py --paths.train ./docbins/dcr_train_mx.spacy --paths.dev ./docbins/dcr_dev_mx.spacy
 	# python -m spacy train ./configs/t2v_rel.cfg --output ./models/dcr_mn_t2v_rjm -c ./relation_extractor_jm/custom_functions.py --paths.train ./docbins/dcr_train_mn.spacy --paths.dev ./docbins/dcr_dev_mn.spacy
-
+	# python -m spacy train ./configs/t2v_rjm.cfg --output ./models/dcr_mu_t2v_rjm_test -c ./relation_extractor_jm/custom_functions.py --paths.train ./docbins/dcr_train_mu.spacy --paths.dev ./docbins/dcr_dev_mu.spacy --components.relation_extractor.model.create_instance_tensor.get_instances.ent1label DEFENDANT --components.relation_extractor.model.create_instance_tensor.get_instances.ent2label OFF
+	#
 	# python -m spacy train ./configs/t2v_rel.cfg --output ./models/dvr_t2v_rel -c ./relation_extractor/custom_functions.py --paths.train ./docbins/dvr_train.spacy --paths.dev ./docbins/dvr_dev.spacy
 	# python -m spacy train ./configs/t2v_rel.cfg --output ./models/dvr_lg_t2v_rel -c ./relation_extractor/custom_functions.py --paths.train ./docbins/dvr_train_lg.spacy --paths.dev ./docbins/dvr_dev_lg.spacy
 	# python -m spacy train ./configs/t2v_rel.cfg --output ./models/dvr_mu_t2v_rel -c ./relation_extractor/custom_functions.py --paths.train ./docbins/dvr_train_mu.spacy --paths.dev ./docbins/dvr_dev_mu.spacy
-	# python -m spacy train ./configs/t2v_rel_p.cfg --output ./models/dvr_mu_t2v_rel_p -c ./relation_extractor/custom_functions.py --paths.train ./docbins/dvr_train_mu.spacy --paths.dev ./docbins/dvr_dev_mu.spacy
+	# python -m spacy train ./configs/t2v_rjm.cfg --output ./models/dvr_mu_t2v_rjm_test -c ./relation_extractor_jm/custom_functions.py --paths.train ./docbins/dvr_train_mu.spacy --paths.dev ./docbins/dvr_dev_mu.spacy --components.relation_extractor.model.create_instance_tensor.get_instances.ent1label DEFENDANT --components.relation_extractor.model.create_instance_tensor.get_instances.ent2label VER
+	# python -m spacy train ./configs/t2v_rjm.cfg --output ./models/dvr_mn_t2v_rjm_test -c ./relation_extractor_jm/custom_functions.py --paths.train ./docbins/dvr_train_mn.spacy --paths.dev ./docbins/dvr_dev_mn.spacy --components.relation_extractor.model.create_instance_tensor.get_instances.ent1label DEFENDANT --components.relation_extractor.model.create_instance_tensor.get_instances.ent2label VER
 	#
 	# python -m spacy train ./configs/t2v_rel.cfg --output ./models/ppo_mini_t2v_rel -c ./relation_extractor/custom_functions.py --paths.train ./docbins/ppo_mini_train.spacy --paths.dev ./docbins/ppo_mini_dev.spacy
 	# python -m spacy train ./configs/t2v_rel.cfg --output ./models/ppo_t2v_rel -c ./relation_extractor/custom_functions.py --paths.train ./docbins/ppo_train.spacy --paths.dev ./docbins/ppo_dev.spacy
@@ -297,7 +300,6 @@ train:
 	# python -m spacy train ./configs/tra_rel.cfg --output ./models/dcr_md_tra_rel -c ./relation_extractor/custom_functions.py --paths.train ./docbins/dcr_train_md.spacy --paths.dev ./docbins/dcr_dev_md.spacy --gpu-id 0
 	# NOT ENOUGH MEMORY python -m spacy train ./configs/tra_rel.cfg --output ./models/dcr_lg_tra_rel -c ./relation_extractor/custom_functions.py --paths.train ./docbins/dcr_train_lg.spacy --paths.dev ./docbins/dcr_dev_lg.spacy --gpu-id 0
 	# python -m spacy train ./configs/tra_rel.cfg --output ./models/dcr_mu_tra_rel -c ./relation_extractor/custom_functions.py --paths.train ./docbins/dcr_train_mu.spacy --paths.dev ./docbins/dcr_dev_mu.spacy --gpu-id 0
-	# python -m spacy train ./configs/tra_rel_p.cfg --output ./models/dcr_mu_tra_rel_p -c ./relation_extractor/custom_functions.py --paths.train ./docbins/dcr_train_mu.spacy --paths.dev ./docbins/dcr_dev_mu.spacy --gpu-id 0
 	#### python -m spacy train ./configs/tra_rel.cfg --output ./models/dcr_mn_tra_rel -c ./relation_extractor/custom_functions.py --paths.train ./docbins/dcr_train_mn.spacy --paths.dev ./docbins/dcr_dev_mn.spacy --gpu-id 0
 	#### python -m spacy train ./configs/tra_rel.cfg --output ./models/dcr_mn_tra_rej -c ./relation_extractor_jm/custom_functions.py --paths.train ./docbins/dcr_train_mn.spacy --paths.dev ./docbins/dcr_dev_mn.spacy --gpu-id 0
 	#### python -m spacy train ./configs/tra_rel.cfg --output ./models/dcr_mx_tra_rel -c ./relation_extractor/custom_functions.py --paths.train ./docbins/dcr_train_mx.spacy --paths.dev ./docbins/dcr_dev_mx.spacy --gpu-id 0
@@ -307,7 +309,8 @@ train:
 	# python -m spacy train ./configs/tra_rel.cfg --output ./models/dvr_tra_rel -c ./relation_extractor/custom_functions.py --paths.train ./docbins/dvr_train.spacy --paths.dev ./docbins/dvr_dev.spacy --gpu-id 0
 	# python -m spacy train ./configs/tra_rel.cfg --output ./models/dvr_lg_tra_rel -c ./relation_extractor/custom_functions.py --paths.train ./docbins/dvr_train_lg.spacy --paths.dev ./docbins/dvr_dev_lg.spacy --gpu-id 0
 	# python -m spacy train ./configs/tra_rel.cfg --output ./models/dvr_mu_tra_rel -c ./relation_extractor/custom_functions.py --paths.train ./docbins/dvr_train_mu.spacy --paths.dev ./docbins/dvr_dev_mu.spacy --gpu-id 0
-	# python -m spacy train ./configs/tra_rel_p.cfg --output ./models/dvr_mu_tra_rel_p -c ./relation_extractor/custom_functions.py --paths.train ./docbins/dvr_train_mu.spacy --paths.dev ./docbins/dvr_dev_mu.spacy --gpu-id 0
+	# python -m spacy train ./configs/tra_rjm.cfg --output ./models/dvr_mu_tra_rjm_test -c ./relation_extractor_jm/custom_functions.py --paths.train ./docbins/dvr_train_mu.spacy --paths.dev ./docbins/dvr_dev_mu.spacy --components.relation_extractor.model.create_instance_tensor.get_instances.ent1label DEFENDANT --components.relation_extractor.model.create_instance_tensor.get_instances.ent2label VER  --gpu-id 0
+	# python -m spacy train ./configs/tra_rjm.cfg --output ./models/dvr_mn_tra_rjm_test -c ./relation_extractor_jm/custom_functions.py --paths.train ./docbins/dvr_train_mn.spacy --paths.dev ./docbins/dvr_dev_mn.spacy --components.relation_extractor.model.create_instance_tensor.get_instances.ent1label DEFENDANT --components.relation_extractor.model.create_instance_tensor.get_instances.ent2label VER  --gpu-id 0
 	#
 	# python -m spacy train ./configs/tra_rel.cfg --output ./models/ppo_mini_tra_rel -c ./relation_extractor/custom_functions.py --paths.train ./docbins/ppo_mini_train.spacy --paths.dev ./docbins/ppo_mini_dev.spacy --gpu-id 0
 	# python -m spacy train ./configs/tra_rel.cfg --output ./models/ppo_tra_rel -c ./relation_extractor/custom_functions.py --paths.train ./docbins/ppo_train.spacy --paths.dev ./docbins/ppo_dev.spacy --gpu-id 0
@@ -344,16 +347,15 @@ test:
 	# python test.py ./models/dcr_t2v_rel/model-best ./docbins/dcr_test_lg.spacy --copyents
 	# python test.py ./models/dcr_t2v_rel/model-best ./docbins/dcr_test_lg.spacy --copyents
 	# python test.py ./models/dcr_mu_t2v_rel/model-best ./docbins/dcr_test_mu.spacy --copyents
-	# python test.py ./models/dcr_mu_t2v_rel_p/model-best ./docbins/dcr_test_mu.spacy --copyents
-	# python test.py ./models/dcr_mu_t2v_rej_p/model-best ./docbins/dcr_test_mu.spacy --copyents
 	# python test.py ./models/dcr_mn_t2v_rel/model-best ./docbins/dcr_test_mn.spacy --copyents
 	# python test.py ./models/dcr_t2v_rel/model-best ./docbins/dcr_test_xl.spacy --copyents
 	#
 	# python test.py ./models/dvr_t2v_rel/model-best ./docbins/dvr_test.spacy --copyents
 	# python test.py ./models/dvr_t2v_rel/model-best ./docbins/dvr_test_lg.spacy --copyents
 	# python test.py ./models/dvr_mu_t2v_rel/model-best ./docbins/dvr_test_mu.spacy --copyents
-	# python test.py ./models/dvr_mu_t2v_rel_p/model-best ./docbins/dvr_test_mu.spacy --copyents
 	# python test.py ./models/dvr_t2v_rel/model-best ./docbins/dvr_test_xl.spacy --copyents
+	# python test_rjm.py ./models/dvr_mu_t2v_rjm_test/model-best ./docbins/dvr_test_mu.spacy --copyents
+	# python test_rjm.py ./models/dvr_mn_t2v_rjm_test/model-best ./docbins/dvr_test_mn.spacy --copyents
 	#
 	# python test.py ./models/ppo_mini_t2v_rel/model-best ./docbins/ppo_mini_test.spacy --copyents
 	# python test.py ./models/ppo_t2v_rel/model-best ./docbins/ppo_test.spacy --copyents
@@ -371,14 +373,14 @@ test:
 	#
 	# python test.py ./models/dcr_tra_rel/model-best ./docbins/dcr_test.spacy --copyents
 	# python test.py ./models/dcr_mu_tra_rel/model-best ./docbins/dcr_test_mu.spacy --copyents
-	# python test.py ./models/dcr_mu_tra_rel_p/model-best ./docbins/dcr_test_mu.spacy --copyents
 	# python test.py ./models/dcr_mn_tra_rel/model-best ./docbins/dcr_test_mn.spacy --copyents
 	# python test.py ./models/dcr_mn_tra_rej/model-best ./docbins/dcr_test_mn.spacy --copyents
 	#
 	# python test.py ./models/dvr_tra_rel/model-best ./docbins/dvr_test.spacy --copyents
 	# python test.py ./models/dvr_mu_tra_rel/model-best ./docbins/dvr_test_mu.spacy --copyents
-	# python test.py ./models/dvr_mu_tra_rel_p/model-best ./docbins/dvr_test_mu.spacy --copyents
-
+	# python test_rjm.py ./models/dvr_mu_tra_rjm_test/model-best ./docbins/dvr_test_mu.spacy --copyents
+	# python test_rjm.py ./models/dvr_mn_tra_rjm_test/model-best ./docbins/dvr_test_mn.spacy --copyents
+	#
 	# python test.py ./models/ppo_mini_tra_rel/model-best ./docbins/ppo_mini_test.spacy --copyents
 	# python test.py ./models/ppo_tra_rel/model-best ./docbins/ppo_test.spacy --copyents
 	# python test.py ./models/ppo_md_tra_rel/model-best ./docbins/ppo_test.spacy --copyents

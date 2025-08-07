@@ -26,7 +26,7 @@ def create_classification_layer(
 
 
 @spacy.registry.misc("rel_instance_generator.v1")
-def create_instances(max_length: int) -> Callable[[Doc], List[Tuple[Span, Span]]]:
+def create_instances(max_length: int, ent1label: str = None, ent2label: str = None) -> Callable[[Doc], List[Tuple[Span, Span]]]:
     def get_instances(doc: Doc) -> List[Tuple[Span, Span]]:
         instances = []
         for ent1 in doc.ents:
@@ -38,7 +38,9 @@ def create_instances(max_length: int) -> Callable[[Doc], List[Tuple[Span, Span]]
 
 #                        instances.append((ent1, ent2))
 
-                        if ent1.label_ == 'DEFENDANT' and ent2.label_ == 'OFF':
+#                        if ent1.label_ == 'DEFENDANT' and ent2.label_ == 'OFF':
+
+                        if ent1label == None or ent2label == None or (ent1.label_ == ent1label and ent2.label_ == ent2label):
 
                             instances.append((ent1, ent2))
 
