@@ -7,10 +7,10 @@ from spacy.tokens import DocBin, Doc
 from spacy.training.example import Example
 
 # make the factory work
-from relation_extractor_jm.rel_pipe import make_relation_extractor, score_relations
+from relation_extractor_context.rel_pipe import make_relation_extractor, score_relations
 
 # make the config work
-from relation_extractor_jm.rel_model import create_relation_model, create_classification_layer, create_instances, create_tensors
+from relation_extractor_context.rel_model import create_relation_model, create_classification_layer, create_instances, create_tensors
 
 def _score_and_format(examples, thresholds):
     for threshold in thresholds:
