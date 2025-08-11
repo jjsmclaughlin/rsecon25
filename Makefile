@@ -13,6 +13,7 @@ venv-make:
 	# pip install -U cupy-cuda12x
 	# pip install spacy-llm
 	# pip install accelerate
+	# pip install rapidfuzz
 
 venv-activate:
 	source .venv/bin/activate
@@ -169,8 +170,12 @@ dcr_rel:
 	python test.py ./models/dcr_mu_tra_rel/model-best ./docbins/dcr_test_mu.spacy --copyents
 	python test.py ./models/dcr_mx_tra_rel/model-best ./docbins/dcr_test_lg.spacy --copyents
 	python test.py ./models/dcr_mx_tra_rel/model-best ./docbins/dcr_test_mu.spacy --copyents
-	python test.py ./models/dcr_mu_t2v_rcx/model-best ./docbins/dcr_test_mu.spacy --copyents
-	python test.py ./models/dcr_mu_tra_rcx/model-best ./docbins/dcr_test_mu.spacy --copyents
+	python test_rcx.py ./models/dcr_mu_t2v_rcx/model-best ./docbins/dcr_test_mu.spacy --copyents
+	python test_rcx.py ./models/dcr_mu_tra_rcx/model-best ./docbins/dcr_test_mu.spacy --copyents
 	#
 	# Spacy evaluate does not work out of the box with custom components.
 
+dvr_rel:
+	python test_phi2.py
+	python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dvr_test_mu.spacy -s4206 --ents=DEFENDANT,GUILTY:VER,NOTGUILTY:VER --rels=DEFVER --minents=VER:2,DEFENDANT:2
+	python test_llm.py ./docbins/dvr_test_mu.spacy --copyents -e 1
