@@ -24,20 +24,29 @@ def _score_and_format(examples, thresholds):
         print(f"threshold {'{:.2f}'.format(threshold)} \t {results}")
 
 
+def defabr(string):
+
+    # Just take the first two words of defendant names (to remove aliases or other extraneous information)
+    string = " ".join(string.split()[:2])
+    string = string.replace(',', '')
+
+    return string.strip()
+
 def matchent(string, ent, label):
 
     string_reg = string.lower().strip()
     ent_reg = str(ent).lower().strip()
 
-    if label == 'VER' and 'not guilty' in string_reg: string_reg = 'acquitted'
+    if label == 'DEFENDANT':
+        string_reg = defabr(string_reg)
+        ent_reg = defabr(ent_reg)
 
-    if label == 'DEFENDANT' and string_reg in ent_reg:
-        #print('BIG MATCH: ***' + string_reg + '***' + ent_reg + '***')
-        return (1.0, ent)
+    if label == 'VER' and 'not guilty' in string_reg: string_reg = 'acquitted' # The LLM sometimes likes to say "Not Guilty" but the Proceedings almost always says "Acquitted".
+    if label == 'VER' and 'pleaded guilty' in ent_reg: ent_reg = 'guilty' # The LLM never says "Pleaded Guily" but the Proceedings usually do.
+
+    if label == 'DEFENDANT' and string_reg in ent_reg: return (1.0, ent) # If the LLM's output for defendant is fully present in the entity text, call it a match. eg. "Sarah Clark" should match "Sarah Clark , otherwise West"
 
     score = rapidfuzz.distance.JaroWinkler.similarity(string_reg, ent_reg) 
-
-    #print(string_reg, ent_reg, score)
 
     return (score, ent)
 
@@ -51,18 +60,12 @@ def findent(string, ents, entlabel):
 
             matches.append(matchent(string, ent, entlabel))
 
-            #if string == str(ent):
-
-            #    return ent
-
     matches = sorted(matches, key=lambda x: x[0], reverse=True)
 
-    if matches[0][0] < 0.7:
+    if matches[0][0] < 0.7: # Try to avoid false matches
 
         print('Could not match: ***' + string + '*** ' + str(matches[0]))
         return None
-
-    #print(matches)
 
     return(matches[0][1])
 
@@ -73,17 +76,12 @@ if ( __name__ == "__main__"):
     parser = argparse.ArgumentParser(description='Read line(s) from a Protege-style jsonl and test a trained model on them.', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
     parser.add_argument('docbin', help='The docbin to read from.')
-    parser.add_argument('-ce', '--copyents', action='store_true', default=False, help='If set, the ents are loaded from the docbin. Neccessary when testing a pipeline which has a relation_extractor but no ner')
     parser.add_argument('-s', '--start', type=int, default=0, help='The doc begin reading the docbin from.')
     parser.add_argument('-e', '--end', type=int, help='The doc on which to stop reading the docbin (defaults to the final doc in the docbin).')
 
     args = parser.parse_args()
 
-
-
-
-    ## Initialise LLM
-    # Load tokenizer and model
+    # Initialise LLM
     model_id = "microsoft/phi-2"
 
     print("Loading tokenizer...")
@@ -92,23 +90,17 @@ if ( __name__ == "__main__"):
     print("Loading model (this may take a minute)...")
     model = AutoModelForCausalLM.from_pretrained(
         model_id,
-        torch_dtype=torch.float16,  # Needed to fit in 6GB GPU
+        torch_dtype=torch.float16,  # Need to fit in 6GB GPU
         device_map="auto"           # Automatically use GPU if available
     )
 
     # Build text generation pipeline
     generator = pipeline("text-generation", model=model, tokenizer=tokenizer)
 
-
-
-
-
-
-    #trained_nlp = spacy.load(args.modeldir)
     db = DocBin(store_user_data=True).from_disk(args.docbin)
 
-    #docs = db.get_docs(trained_nlp.vocab)
     nlp = spacy.blank("en")
+    nlp.add_pipe('sentencizer') # We use this to help build the verdicts section of our prompt.
     docs = db.get_docs(nlp.vocab)
 
     end = db.__len__()
@@ -118,48 +110,86 @@ if ( __name__ == "__main__"):
 
     print('Will process docs ' + str(args.start) + ' to ' + str(end))
 
-    rels_to_evaluate = False
     examples = []
 
     for idx, gold in enumerate(docs):
 
         if idx >= args.start and idx < end:
 
-            print()
-            print('---------------- DOC ' + str(idx) + ' ----------------')
-            print(gold)
-            print()
-
             doctxt = str(gold)
 
-            if '[Transportation. See summary.]' in doctxt:
-
-                doctxt = doctxt.replace('[Transportation. See summary.]', '')
-
-            #print(len(doctxt))
-
-            doctxt = re.sub(r'[0-9]', r'', doctxt)
-
-
-            if (len(doctxt) > 1000):
-                doctxt = doctxt[0:500] + '. ' + doctxt[-500:]
-
+            print()
+            print('---------------- DOC ' + str(idx) + ' ----------------')
             print(doctxt)
             print()
 
+            # Now we mangle the doctxt to make it more likely the LLM will give us good results.
+
             pred = Doc(
-                #trained_nlp.vocab,
                 nlp.vocab,
                 words=[t.text for t in gold],
                 spaces=[t.whitespace_ for t in gold],
             )
 
-            if args.copyents:
-                pred.ents = gold.ents
+            pred.ents = gold.ents
 
-            #for name, proc in trained_nlp.pipeline:
-            #    pred = proc(pred)
-            # This is where we will apply our LLM
+            for name, proc in nlp.pipeline: pred = proc(pred) # Run the sentencizer on the doc
+
+            # Create a list of defendants.
+
+            deflist = ''
+
+            for ent in pred.ents:
+
+                if ent.label_ == 'DEFENDANT':
+
+                    deflist = deflist + defabr(str(ent)) + '. '
+
+            # Create a list of the sentences which contain verdicts.
+
+            versents = []
+
+            for ent in pred.ents:
+
+                if ent.label_ == 'VER':
+
+                    if ent.sent not in versents:
+
+                        versents.append(ent.sent)
+
+            vertxt = ''
+
+            for sent in versents:
+
+                vertxt = vertxt + '' + str(sent) + ' '
+
+            # We create a fake document text which is just our defendants list followed by the verdict sentences. 
+
+            doctxt = 'Defendants: ' + deflist + 'Verdicts: ' + vertxt
+            
+            if 'Transportation' in doctxt: doctxt = doctxt.replace('Transportation', '') # The references to punishments can confuse the LLM
+            if 'Death' in doctxt: doctxt = doctxt.replace('Death', '')
+            if ' [' in doctxt: doctxt = doctxt.replace(' [', '')
+
+            # Print our mangled doctxt
+            print(doctxt)
+            print()
+
+            # Query the LLM
+
+            prompt = (
+                "Instruct: You are an expert Natural Language Processing system. Your task is to extract structured information from the following legal case text. "
+                "For each defendant, output one line in the following format: [Defendant Name]: [Verdict]. Do not put any other text in your answer. "
+                "Text to analyze: "
+                "\""
+                + str(doctxt) + 
+                "\"\nOutput:"
+            )
+
+            output = generator(prompt, max_new_tokens=256, temperature=0.1, do_sample=True, pad_token_id=tokenizer.eos_token_id)
+            otext = output[0]["generated_text"]
+
+            # Parse the LLM result into a spaCy rel structure 
 
             spacy_rels = {}
             # First, use the gold ents to set up the empty dictionaries for each possible combination of entity start tokens
@@ -167,58 +197,31 @@ if ( __name__ == "__main__"):
                 for x2 in gold.ents:
                     spacy_rels[(x1.start, x2.start)] = {}
 
-            prompt = (
-                "Instruct: You are an expert Natural Language Processing system. Your task is to extract structured information from the following legal case text. "
-                "For each defendant, output one line in the following format: [Defendant Name], [Verdict]. Do not put any other text in your answer. "
-                "Text to analyze: "
-                "\""
-                #"Robert Nowland, of Christ-Church, was indicted, and Patrick Nowland (his Father) of the same Parish, was a 2d time indicted for breaking and entering the House of William Durant. At the Prisoner Patrick's House. It appear'd that Trevors was a most notorious Rogue, and belong'd to Patrick's Gang; and that last Sessions he was try'd for robbing the Dog Tavern in Newgate-street, when Patrick was an Evidence for him. The Evidence not being sufficient against Robert Nowland, the Jury acquitted him, and found Patrick Guilty. Death."
-                + str(doctxt) + 
-                "\"\nOutput:"
-            )
-
-            # Generate output
-            #print("\nGenerating...")
-            output = generator(prompt, max_new_tokens=256, temperature=0.1, do_sample=True, pad_token_id=tokenizer.eos_token_id)
-            otext = output[0]["generated_text"]
-
-            # Display result
-            #print("\n--- Output ---")
-            #print(otext)
-            #print()
-
             if "Output:" in otext:
 
-                otext = otext.rsplit("Output:", 1)[1].strip()
+                otext = otext.rsplit("Output:", 1)[1].strip() # The LLM's output follows the string "Output:"
                 print('--------- LLM SAYS: --------')
                 print(otext)
                 print('----------------------------')
                 print()
 
-                opairs = re.split("\n|\\.", otext)
-
-                #print(opairs)
-                #print()
+                opairs = re.split("\n|\\.", otext) # We asked for one defendant per line but sometimes we get one defendant per sentence
 
                 for opair in opairs:
 
-                    if ',' in opair:
+                    if ':' in opair:
 
-                        defver = opair.strip().split(',')
+                        defver = opair.strip().split(':')
                     
                         defs = defver[0].strip()
                         vers = defver[1].strip()
 
-                        #print('***' + defs + '***' + vers + '***')
-
-                        defe = findent(defs, gold.ents, 'DEFENDANT')
+                        defe = findent(defs, gold.ents, 'DEFENDANT') # Find the ents which match the LLM's output most closely. Something of a dark art.
                         vere = findent(vers, gold.ents, 'VER')
-
-                        #print(str(defe))
-                        #print(str(vere))
 
                         if defe and vere:
 
+                            # Add the appropriate relationship to the spaCy rel structure
                             spacy_rels[(defe.start, vere.start)]['DEFVER'] = 1.0
 
 
@@ -229,40 +232,9 @@ if ( __name__ == "__main__"):
                         if label not in spacy_rels[(x1.start, x2.start)]:
                             spacy_rels[(x1.start, x2.start)]['DEFVER'] = 0.0
 
-            pred._.rel = spacy_rels
+            pred._.rel = spacy_rels # Add the rel structure to the pred document
 
-
-
-
-            examples.append(Example(pred, gold))
-
-            # print the spans in gold
-            if 'sc' in gold.spans:
-                print("GOLD SPANS:")
-                for span in gold.spans['sc']:
-                    print(str(span.label_).ljust(20) + ' ' + str(span.start).ljust(3) + '-> ' + str(span.end).ljust(3) + ' ' + str(span))
-                print()
-
-            # print the spans in pred
-            if 'sc' in pred.spans:
-                print("PRED SPANS:")
-                for span, confidence in zip(pred.spans['sc'], pred.spans['sc'].attrs["scores"]):
-                    print(str(span.label_).ljust(20) + ' ' + str(confidence).ljust(12) + ' ' + str(span.start).ljust(3) + '-> ' + str(span.end).ljust(3) + ' ' + str(span))
-                print()
-
-            # print the ents in gold
-            #if gold.ents:
-            #    print("GOLD ENTS:")
-            #    for ent in gold.ents:
-            #        print(str(ent.label_).ljust(20) + ' ' + str(ent.start).ljust(3) + '-> ' + str(ent.end).ljust(3) + ' ' + str(ent))
-            #    print()
-
-            # print the ents in pred
-            if pred.ents and args.copyents is False:
-                print("PRED ENTS:")
-                for ent in pred.ents:
-                    print(str(ent.label_).ljust(20) + ' ' + str(ent.start).ljust(3) + '-> ' + str(ent.end).ljust(3) + ' ' + str(ent))
-                print()
+            examples.append(Example(pred, gold)) # Record the gold and pred doc so the pred doc can form part of the evauation later
 
             # Print the rels in gold
             if gold._.rel:
@@ -290,7 +262,7 @@ if ( __name__ == "__main__"):
 
             # Print the rels in pred
             if pred._.rel:
-                rels_to_evaluate = True
+
                 print("-------- PRED RELS: --------")
 
                 # Create a dictionary so we can look up each ent using its starting token
@@ -312,13 +284,12 @@ if ( __name__ == "__main__"):
                             print('+ ' + str(childent.label_).ljust(20) + ' ' + str(childent.start).ljust(3) + '-> ' + str(childent.end).ljust(3) + ' ' + str(childent))
                             print()
 
+
     # We cannot use the SpaCy evaluate command to evaluate relation_extractor so let's do it here. Code is borrowed from relation_extrator tutorial itself.
-    if rels_to_evaluate:
+    # Threshold is the cutoff to consider a prediction "positive". The docs for relation_extractor say this should be 0.5
+    thresholds = [0.000, 0.050, 0.100, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.99, 0.999]
 
-        # Threshold is the cutoff to consider a prediction "positive". The docs for relation_extractor say this should be 0.5
-        thresholds = [0.000, 0.050, 0.100, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.99, 0.999]
-
-        print()
-        print("Results of the trained model:")
-        _score_and_format(examples, thresholds)
+    print()
+    print("Results of the trained model:")
+    _score_and_format(examples, thresholds)
 

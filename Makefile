@@ -1,4 +1,6 @@
 
+.PHONY: venv-make venv-activate venv-deactivate gpu-test config fillconfig dvv_ner cri_ner dcr_rel dvr_rel
+
 venv-make:
 	# https://docs.python.org/3/library/venv.html
 	# https://spacy.io/usage
@@ -23,9 +25,6 @@ venv-deactivate:
 
 gpu-test:
 	python gpu_test.py
-
-obp_to_prodigy:
-	python obp_to_prodigy.py
 
 config:
 	python -m spacy init config ./baseconfigs/t2v_ner.cfg --lang en --pipeline ner
@@ -153,7 +152,7 @@ dcr_rel:
 	python -m spacy train ./configs/tra_rel.cfg --output ./models/dcr_mu_tra_rel -c ./relation_extractor/custom_functions.py --paths.train ./docbins/dcr_train_mu.spacy --paths.dev ./docbins/dcr_dev_mu.spacy --gpu-id 0
 	python -m spacy train ./configs/tra_rel.cfg --output ./models/dcr_mx_tra_rel -c ./relation_extractor/custom_functions.py --paths.train ./docbins/dcr_train_mx.spacy --paths.dev ./docbins/dcr_dev_mx.spacy --gpu-id 0
 	python -m spacy train ./configs/t2v_rcx.cfg --output ./models/dcr_mu_t2v_rcx -c ./relation_extractor_context/custom_functions.py --paths.train ./docbins/dcr_train_mu.spacy --paths.dev ./docbins/dcr_dev_mu.spacy --components.relation_extractor.model.create_instance_tensor.get_instances.ent1label DEFENDANT --components.relation_extractor.model.create_instance_tensor.get_instances.ent2label OFF
-	python -m spacy train ./configs/tra_rcx.cfg --output ./models/dcr_mu_tra_rcx -c ./relation_extractor_context/custom_functions.py --paths.train ./docbins/dcr_train_mu.spacy --paths.dev ./docbins/dcr_dev_mu.spacy --gpu-id 0
+	python -m spacy train ./configs/tra_rcx.cfg --output ./models/dcr_mu_tra_rcx -c ./relation_extractor_context/custom_functions.py --paths.train ./docbins/dcr_train_mu.spacy --paths.dev ./docbins/dcr_dev_mu.spacy --components.relation_extractor.model.create_instance_tensor.get_instances.ent1label DEFENDANT --components.relation_extractor.model.create_instance_tensor.get_instances.ent2label OFF --gpu-id 0
 	#
 	# Test
 	python test.py ./models/dcr_t2v_rel/model-best ./docbins/dcr_test_lg.spacy --copyents
@@ -176,6 +175,5 @@ dcr_rel:
 	# Spacy evaluate does not work out of the box with custom components.
 
 dvr_rel:
-	python test_phi2.py
 	python prodigy_to_docbin.py jsonl/obp.jsonl --outfile=docbins/dvr_test_mu.spacy -s4206 --ents=DEFENDANT,GUILTY:VER,NOTGUILTY:VER --rels=DEFVER --minents=VER:2,DEFENDANT:2
-	python test_llm.py ./docbins/dvr_test_mu.spacy --copyents -e 1
+	python test_llm.py ./docbins/dvr_test_mu.spacy
