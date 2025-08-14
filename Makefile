@@ -17,9 +17,6 @@ venv-make:
 	# pip install accelerate
 	# pip install rapidfuzz
 
-venv-activate:
-	source .venv/bin/activate
-
 venv-deactivate:
 	deactivate
 
